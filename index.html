@@ -43,7 +43,11 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="css/style.css" />
 
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="8510a201-ba22-4b97-b4d2-8b48fc67fcce"></script>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="8510a201-ba22-4b97-b4d2-8b48fc67fcce"
+    ></script>
   </head>
   <body>
     <!-- No-JS fallback -->
@@ -378,6 +382,33 @@
               </svg>
               ×4
             </button>
+            <button
+              class="btn-bb upload-btn"
+              id="upload-btn"
+              onclick="triggerUpload()"
+              title="Upload existing photo"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path d="M8 2v8M5 5l3-3 3 3" />
+                <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
+              </svg>
+              Upload
+            </button>
+            <input
+              type="file"
+              id="upload-input"
+              accept="image/*"
+              multiple
+              style="display: none"
+              onchange="handleUpload(event)"
+            />
           </div>
           <div class="timer-row">
             <span class="section-label mb-0">Timer</span>

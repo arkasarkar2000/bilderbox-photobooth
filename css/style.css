@@ -897,3 +897,12 @@ body.light-mode #countdown { text-shadow: 0 0 40px rgba(232,116,154,0.5); }
   color: var(--text2);
   line-height: 1.65;
 }
+.upload-btn {
+  border-style: dashed;
+}
+
+.upload-btn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  border-style: dashed;
+}
