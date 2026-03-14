@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Bilderbox</title>
+  <meta name="description" content="Page not found — Bilderbox" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pages.css" />
+  <style>
+    .error-page {
+      min-height: calc(100vh - 56px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .error-inner { max-width: 480px; }
+
+    .film-strip {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .film-frame {
+      width: 52px;
+      height: 42px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .film-frame::before,
+    .film-frame::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 6px;
+      background: var(--bg);
+      border-radius: 1px;
+    }
+
+    .film-frame::before { top: 3px; }
+    .film-frame::after  { bottom: 3px; }
+
+    .film-frame.missing {
+      background: var(--pink-dim);
+      border-color: rgba(244,167,192,0.3);
+    }
+
+    .film-frame.missing::before,
+    .film-frame.missing::after {
+      background: rgba(244,167,192,0.2);
+    }
+
+    .error-code { user-select: none; }
+
+    .error-msg {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text2);
+      margin-bottom: 0.75rem;
+    }
+
+    .error-sub {
+      font-size: 0.85rem;
+      color: var(--text3);
+      line-height: 1.8;
+      margin-bottom: 0.5rem;
+    }
+
+    .error-links {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .link-quiet {
+      color: var(--text3);
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+
+    .link-quiet:hover { color: var(--pink); }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="logo">bilder<span>box</span></a>
+    <a href="index.html" class="back-link">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 2L4 6l4 4"/>
+      </svg>
+      Back to app
+    </a>
+  </header>
+
+  <div class="error-page">
+    <div class="error-inner">
+
+      <!-- Film strip with one missing frame -->
+      <div class="film-strip">
+        <div class="film-frame"></div>
+        <div class="film-frame"></div>
+        <div class="film-frame missing"></div>
+        <div class="film-frame"></div>
+        <div class="film-frame"></div>
+      </div>
+
+      <div class="error-code">4<span>0</span>4</div>
+      <div class="error-msg">This frame didn't develop.</div>
+      <p class="error-sub">
+        The page you're looking for is either missing, moved,<br>
+        or was never here to begin with.
+      </p>
+
+      <a href="index.html" class="btn-home">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 3L5 7l4 4"/>
+        </svg>
+        Back to the photobooth
+      </a>
+
+      <div class="error-links">
+        <a href="about.html" class="link-quiet">About</a>
+        <a href="privacy.html" class="link-quiet">Privacy</a>
+        <a href="terms.html" class="link-quiet">Terms</a>
+        <!-- <a href="mailto:hello@bilderbox.app" class="link-quiet">Contact</a> -->
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

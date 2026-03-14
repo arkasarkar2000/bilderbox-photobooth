@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Bilderbox</title>
+  <meta name="description" content="Bilderbox privacy policy. No data collected, no servers, everything stays on your device." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="logo">bilder<span>box</span></a>
+    <a href="index.html" class="back-link">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 2L4 6l4 4"/>
+      </svg>
+      Back to app
+    </a>
+  </header>
+
+  <div class="page-wrap">
+
+    <div class="page-hero">
+      <div class="page-tag">Legal</div>
+      <h1 class="page-title">Privacy Policy</h1>
+      <div class="page-meta">Last updated: March 2026 &nbsp;·&nbsp; Effective immediately</div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>The short version:</strong> Bilderbox runs entirely in your browser. We collect zero personal data, store nothing on any server, and your photos never leave your device unless you explicitly choose to share or download them.
+    </div>
+
+    <nav class="toc">
+      <div class="toc-label">Contents</div>
+      <ol>
+        <li><a href="#who-we-are">Who we are</a></li>
+        <li><a href="#data-collected">What data we collect</a></li>
+        <li><a href="#camera">Camera access</a></li>
+        <li><a href="#local-storage">Local storage</a></li>
+        <li><a href="#third-parties">Third-party services</a></li>
+        <li><a href="#sharing">Sharing features</a></li>
+        <li><a href="#cookies">Cookies</a></li>
+        <li><a href="#children">Children</a></li>
+        <li><a href="#your-rights">Your rights</a></li>
+        <li><a href="#changes">Changes to this policy</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </nav>
+
+    <div class="doc-section" id="who-we-are">
+      <h2>1. Who we are</h2>
+      <p>Bilderbox is a client-side web application — a photobooth tool that runs entirely within your browser. There is no backend server, no user accounts, and no cloud infrastructure associated with Bilderbox itself.</p>
+      <p>References to "we", "our", or "Bilderbox" in this policy refer to the application and its operators.</p>
+    </div>
+
+    <div class="doc-section" id="data-collected">
+      <h2>2. What data we collect</h2>
+      <p><strong>We collect no personal data whatsoever.</strong></p>
+      <p>Bilderbox does not:</p>
+      <ul>
+        <li>Collect your name, email address, or any identifying information</li>
+        <li>Track your usage, behaviour, or session activity</li>
+        <li>Send any data to a remote server</li>
+        <li>Use analytics tools, telemetry, or crash reporting</li>
+        <li>Require account creation or login</li>
+      </ul>
+      <p>Everything happens locally in your browser's memory. When you close the tab, all photo data is gone.</p>
+    </div>
+
+    <div class="doc-section" id="camera">
+      <h2>3. Camera access</h2>
+      <p>Bilderbox requests access to your device's camera through the standard browser <code>getUserMedia</code> API. This is required to provide the live viewfinder and capture photos.</p>
+      <ul>
+        <li>Camera access is only requested when you press "Enable camera"</li>
+        <li>The browser will show a native permission prompt — you are in full control</li>
+        <li>You can revoke camera permission at any time through your browser settings</li>
+        <li>The camera stream is never transmitted anywhere — it is processed only in-browser</li>
+        <li>Photos captured from your camera are stored only in JavaScript memory for the duration of your session</li>
+      </ul>
+      <p>Bilderbox does not access your camera in the background, does not record video, and does not retain any footage after a capture event.</p>
+    </div>
+
+    <div class="doc-section" id="local-storage">
+      <h2>4. Local storage</h2>
+      <p>Bilderbox does not use <code>localStorage</code>, <code>sessionStorage</code>, <code>IndexedDB</code>, or any browser persistence mechanism. Photos exist only in JavaScript memory and are lost when the page is closed or refreshed. This is intentional — your photos are yours and we do not cache them.</p>
+      <p>The service worker used for PWA (offline) functionality caches only the application's own static files (HTML, CSS, JS). It does not cache any user-generated content or photos.</p>
+    </div>
+
+    <div class="doc-section" id="third-parties">
+      <h2>5. Third-party services</h2>
+      <p>Bilderbox loads the following external resources to function:</p>
+      <ul>
+        <li><strong>Google Fonts</strong> — fonts are loaded from <code>fonts.googleapis.com</code>. Google may log the request including your IP address. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color:var(--pink);">Google's privacy policy</a>.</li>
+        <li><strong>Bootstrap (jsDelivr CDN)</strong> — the UI framework is loaded from <code>cdn.jsdelivr.net</code>. jsDelivr may log request metadata. See <a href="https://www.jsdelivr.com/privacy-policy-jsdelivr-net" target="_blank" rel="noopener" style="color:var(--pink);">jsDelivr's privacy policy</a>.</li>
+        <li><strong>QRCode.js (jsDelivr CDN)</strong> — the QR code library is also loaded from jsDelivr under the same conditions above.</li>
+      </ul>
+      <p>These are the only external network requests Bilderbox makes. No advertising networks, no tracking pixels, no analytics services.</p>
+    </div>
+
+    <div class="doc-section" id="sharing">
+      <h2>6. Sharing features</h2>
+      <p>Bilderbox provides optional sharing tools. These work as follows:</p>
+      <ul>
+        <li><strong>Download</strong> — saves the image directly to your device. No network request is made.</li>
+        <li><strong>Native share</strong> — invokes your operating system's share sheet via the Web Share API. The image is passed to whichever app you choose. Bilderbox has no visibility into where you share it.</li>
+        <li><strong>QR code</strong> — generates a QR code that encodes a local <code>blob:</code> URL containing your strip image. This URL is ephemeral and exists only in your browser's memory. It cannot be accessed by anyone else and is never transmitted to a server.</li>
+        <li><strong>Instagram</strong> — the app saves the image to your device and prompts you to post manually from Instagram. Bilderbox does not connect to or communicate with Instagram's servers.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="cookies">
+      <h2>7. Cookies</h2>
+      <p>Bilderbox sets no cookies of any kind — not functional, not analytical, not advertising. The application operates with zero cookie footprint.</p>
+      <p>Third-party CDNs (Google Fonts, jsDelivr) may set their own cookies subject to their own policies.</p>
+    </div>
+
+    <div class="doc-section" id="children">
+      <h2>8. Children</h2>
+      <p>Bilderbox is suitable for all ages. Because we collect no personal data and require no account, there are no age-gated features and no risk of children's data being collected or processed by us.</p>
+      <p>Parents and guardians should be aware that when children use the camera feature, the live feed and photos are processed locally in the browser as described in Section 3.</p>
+    </div>
+
+    <div class="doc-section" id="your-rights">
+      <h2>9. Your rights</h2>
+      <p>Because Bilderbox collects no personal data, there is no data stored about you for us to access, rectify, export, or delete. Your rights under GDPR, CCPA, and similar data protection laws are inherently satisfied — we simply hold nothing about you.</p>
+      <p>If you have concerns about data processed by third-party services listed in Section 5, please contact those services directly.</p>
+    </div>
+
+    <div class="doc-section" id="changes">
+      <h2>10. Changes to this policy</h2>
+      <p>If this policy is updated, the "Last updated" date at the top of this page will change. We encourage you to review this page periodically. Continued use of Bilderbox after changes are posted constitutes acceptance of those changes.</p>
+      <p>We will never introduce data collection practices without updating this policy first.</p>
+    </div>
+
+    <div class="doc-section" id="contact">
+      <h2>11. Contact</h2>
+      <p>Questions about this privacy policy? Get in touch:</p>
+      <div class="contact-card">
+        <dl>
+          <div class="contact-row">
+            <dt>App</dt>
+            <dd>Bilderbox</dd>
+          </div>
+          <!-- <div class="contact-row">
+            <dt>Email</dt>
+            <dd><a href="mailto:hello@bilderbox.app">hello@bilderbox.app</a></dd>
+          </div> -->
+          <div class="contact-row">
+            <dt>Response</dt>
+            <dd>We aim to respond within 5 business days</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <nav class="footer-nav">
+        <a href="index.html">App</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="about.html">About</a>
+        <a href="404.html">404</a>
+      </nav>
+      <div class="footer-copy">&copy; 2026 Bilderbox</div>
+    </footer>
+
+  </div>
+</body>
+</html>

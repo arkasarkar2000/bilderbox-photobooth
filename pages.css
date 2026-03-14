@@ -1,0 +1,313 @@
+/* ─────────────────────────────────────────
+   Bilderbox — pages.css
+   Shared styles for all legal / info pages
+───────────────────────────────────────── */
+
+:root {
+  --bg:      #0e0b10;
+  --bg2:     #160f1a;
+  --surface: #1e1525;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --pink:    #f4a7c0;
+  --pink2:   #f9cad8;
+  --pink-dim:rgba(244,167,192,0.1);
+  --text:    #f0eaf5;
+  --text2:   #a89ab8;
+  --text3:   #5e5070;
+  --radius:  8px;
+  --radius2: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* ─── Header ─── */
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(14,11,16,0.93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.logo span { color: var(--pink); font-style: italic; }
+
+.back-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+
+.back-link:hover { color: var(--pink); }
+
+/* ─── Page wrapper ─── */
+.page-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* ─── Page hero ─── */
+.page-hero {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 0.75rem;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+
+.page-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+
+/* ─── Content sections ─── */
+.doc-section {
+  margin-bottom: 2.5rem;
+}
+
+.doc-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.doc-section p {
+  color: var(--text2);
+  margin-bottom: 0.9rem;
+  font-size: 0.93rem;
+}
+
+.doc-section p:last-child { margin-bottom: 0; }
+
+.doc-section ul, .doc-section ol {
+  color: var(--text2);
+  padding-left: 1.4rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.93rem;
+}
+
+.doc-section li { margin-bottom: 0.4rem; }
+
+/* highlight box */
+.highlight-box {
+  background: var(--pink-dim);
+  border: 1px solid rgba(244,167,192,0.2);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.88rem;
+  color: var(--pink2);
+  line-height: 1.7;
+}
+
+.highlight-box strong { color: var(--pink); font-weight: 500; }
+
+/* inline code */
+code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--surface);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  color: var(--pink2);
+}
+
+/* ─── Table of contents ─── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius2);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.75rem;
+}
+
+.toc ol {
+  padding-left: 1.2rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.toc a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 0.15s;
+}
+
+.toc a:hover { color: var(--pink); }
+
+/* ─── Footer ─── */
+.page-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  color: var(--text3);
+  text-decoration: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.footer-nav a:hover { color: var(--pink); }
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+
+/* ─── Contact card ─── */
+.contact-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius2);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.contact-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  font-size: 0.88rem;
+}
+
+.contact-row dt {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  min-width: 80px;
+  padding-top: 2px;
+}
+
+.contact-row dd { color: var(--text2); }
+.contact-row a { color: var(--pink); text-decoration: none; }
+.contact-row a:hover { text-decoration: underline; }
+
+/* ─── 404 specific ─── */
+.error-code {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(5rem, 20vw, 9rem);
+  font-weight: 700;
+  color: var(--surface);
+  line-height: 1;
+  margin-bottom: 1rem;
+  letter-spacing: -0.04em;
+}
+
+.error-code span { color: var(--pink); }
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.35rem;
+  background: var(--pink);
+  border: none;
+  border-radius: 999px;
+  color: #1a0f20;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 1.5rem;
+}
+
+.btn-home:hover { background: var(--pink2); }
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  .page-wrap { padding: 2rem 1rem 4rem; }
+  .page-header { padding: 0 1rem; }
+  .page-footer { flex-direction: column; }
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Bilderbox</title>
+  <meta name="description" content="About Bilderbox — a cute analog-style photobooth that runs entirely in your browser." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pages.css" />
+  <style>
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .feature-card .f-icon {
+      color: var(--pink);
+      margin-bottom: 0.2rem;
+    }
+
+    .feature-card .f-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .feature-card .f-desc {
+      font-size: 0.8rem;
+      color: var(--text3);
+      line-height: 1.6;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .tech-pill {
+      padding: 0.22rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-box .s-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--pink);
+      line-height: 1.1;
+    }
+
+    .stat-box .s-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 400px) {
+      .stat-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="logo">bilder<span>box</span></a>
+    <a href="index.html" class="back-link">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 2L4 6l4 4"/>
+      </svg>
+      Back to app
+    </a>
+  </header>
+
+  <div class="page-wrap">
+
+    <div class="page-hero">
+      <div class="page-tag">About</div>
+      <h1 class="page-title">Your browser is<br><em style="color:var(--pink);">the photobooth.</em></h1>
+      <div class="page-meta">No apps. No sign-ups. No cloud. Just you and your camera.</div>
+    </div>
+
+    <div class="doc-section">
+      <h2>What is Bilderbox?</h2>
+      <p>Bilderbox (from German <em>Bilder</em> — pictures, and <em>box</em> — well, box) is a free, open browser-based photobooth inspired by the analog film photography aesthetic and the photo booth trend sweeping social media.</p>
+      <p>There's something magical about a physical photo strip — the format, the imperfection, the instant memory. Bilderbox brings that feeling to the web without needing an app, an account, or an internet connection after the first load.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>What it does</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="1" y="4" width="16" height="12" rx="2"/>
+              <circle cx="9" cy="10" r="3.5"/>
+              <path d="M6 4l1.5-2h3L12 4"/>
+            </svg>
+          </div>
+          <div class="f-title">Real-time capture</div>
+          <div class="f-desc">Live viewfinder with single shot and burst mode (4 photos).</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="9" cy="9" r="7.5"/>
+              <path d="M9 4v5l3 3"/>
+            </svg>
+          </div>
+          <div class="f-title">Self-timer</div>
+          <div class="f-desc">3, 5, or 10 second countdown so you can get in the frame.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="2" y="2" width="14" height="10" rx="1.5"/>
+              <path d="M5 16h8M9 12v4"/>
+            </svg>
+          </div>
+          <div class="f-title">11 filters</div>
+          <div class="f-desc">B&W, Sepia, Vivid, Fade, Noir, Warm, Disposable, Kodak, Fujifilm, Y2K.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="2" y="2" width="6" height="6" rx="1"/>
+              <rect x="10" y="2" width="6" height="6" rx="1"/>
+              <rect x="2" y="10" width="6" height="6" rx="1"/>
+              <rect x="10" y="10" width="6" height="6" rx="1"/>
+            </svg>
+          </div>
+          <div class="f-title">4 layouts</div>
+          <div class="f-desc">Classic strip, 2×2 grid, film reel, and scattered polaroid.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M9 3v8M6 8l3 3 3-3"/><path d="M3 14v1a1 1 0 001 1h10a1 1 0 001-1v-1"/>
+            </svg>
+          </div>
+          <div class="f-title">Download &amp; share</div>
+          <div class="f-desc">Save as strip, reel, or grid. QR code sharing included.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M9 2a7 7 0 100 14A7 7 0 009 2z"/>
+              <path d="M9 6v6M6 9h6"/>
+            </svg>
+          </div>
+          <div class="f-title">Installs as a PWA</div>
+          <div class="f-desc">Add to home screen on any device. Works offline once installed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>By the numbers</h2>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="s-num">0</div>
+          <div class="s-label">Servers</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-num">0</div>
+          <div class="s-label">Data collected</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-num">11</div>
+          <div class="s-label">Filters</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-num">4</div>
+          <div class="s-label">Layouts</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-num">7</div>
+          <div class="s-label">Frames</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-num">100%</div>
+          <div class="s-label">In-browser</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>Built with</h2>
+      <p>Bilderbox is intentionally built without a framework or build step — it's plain HTML, CSS, and JavaScript.</p>
+      <div class="tech-stack">
+        <span class="tech-pill">HTML5</span>
+        <span class="tech-pill">CSS3</span>
+        <span class="tech-pill">Vanilla JS</span>
+        <span class="tech-pill">Canvas API</span>
+        <span class="tech-pill">MediaDevices API</span>
+        <span class="tech-pill">Web Share API</span>
+        <span class="tech-pill">Service Workers</span>
+        <span class="tech-pill">Bootstrap 5</span>
+        <span class="tech-pill">QRCode.js</span>
+        <span class="tech-pill">Google Fonts</span>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>Privacy by design</h2>
+      <p>Bilderbox was designed from the ground up to not collect any data. This isn't a legal technicality — there is genuinely no infrastructure to send data to. Everything happens in your browser, in memory, and disappears when you close the tab.</p>
+      <p>See our full <a href="privacy.html" style="color:var(--pink);">Privacy Policy</a> for more detail.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>Get in touch</h2>
+      <p>Have a feature idea, found a bug, or just want to say hello?</p>
+      <div class="contact-card">
+        <dl>
+          <div class="contact-row">
+            <dt>Email</dt>
+            <!-- <dd><a href="mailto:hello@bilderbox.app">hello@bilderbox.app</a></dd> -->
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <nav class="footer-nav">
+        <a href="index.html">App</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="about.html">About</a>
+      </nav>
+      <div class="footer-copy">&copy; 2026 Bilderbox</div>
+    </footer>
+
+  </div>
+</body>
+</html>
