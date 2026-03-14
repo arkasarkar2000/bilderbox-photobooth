@@ -32,6 +32,30 @@
   --header-h: 58px;
 }
 
+/* ─── Light mode overrides ─── */
+body.light-mode {
+  --bg: #fdf6f9;
+  --bg2: #f7edf3;
+  --bg3: #f0e0ea;
+  --surface: #fce8f1;
+  --surface2: #f9d6e8;
+  --border: rgba(180, 100, 140, 0.15);
+  --border2: rgba(180, 100, 140, 0.25);
+
+  --pink: #e8749a;
+  --pink2: #d45c86;
+  --pink3: #fce8ef;
+  --pink-dim: rgba(232, 116, 154, 0.12);
+  --pink-glow: rgba(232, 116, 154, 0.08);
+
+  --text: #2a1520;
+  --text2: #6b3050;
+  --text3: #b07090;
+  --accent: #c4873a;
+
+  --red: #c0392b;
+}
+
 /* ─── Reset ─── */
 *,
 *::before,
@@ -166,8 +190,8 @@ body {
 .camera-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  max-height: 460px;
+  aspect-ratio: 3 / 4;
+  max-height: 55vh;
   background: #000;
   border-radius: var(--radius2);
   overflow: hidden;
@@ -183,12 +207,33 @@ body {
   }
 }
 
+@media (max-width: 991px) {
+  .main-col {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  /* hide mood bar and filter bar initially on mobile to save space */
+  .mood-bar,
+  .section-block:has(#filter-bar) {
+    order: 3;
+  }
+
+  /* push capture controls to top */
+  .section-block:has(#capture-btn) {
+    order: 1;
+  }
+}
+
 #video,
 #canvas-preview {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+#video {
+  transform: scaleX(-1);
 }
 
 #canvas-preview {
@@ -1233,4 +1278,48 @@ body {
 
 .footer-made-with span {
   color: var(--pink);
+}
+
+
+/* ─── Theme toggle ─── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: var(--pink-dim);
+}
+
+body.light-mode .app-header {
+  background: rgba(253,246,249,0.94);
+}
+
+body.light-mode .startup-screen {
+  background: var(--bg);
+}
+
+body.light-mode .camera-wrap {
+  box-shadow: 0 0 0 1px var(--pink-dim), 0 8px 40px rgba(232,116,154,0.08);
+}
+
+body.light-mode .vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(253,246,249,0.5) 100%);
+}
+
+body.light-mode #countdown {
+  color: var(--pink2);
+  text-shadow: 0 0 40px rgba(232,116,154,0.5);
 }

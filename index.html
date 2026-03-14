@@ -48,6 +48,39 @@
           bilder<span>box</span>
           <div class="logo-sub">dein fotostudio</div>
         </div>
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          onclick="toggleTheme()"
+          title="Toggle light/dark mode"
+        >
+          <svg
+            id="theme-icon-dark"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="8" cy="8" r="3.5" />
+            <path
+              d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"
+            />
+          </svg>
+          <svg
+            id="theme-icon-light"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            style="display: none"
+          >
+            <path d="M13.5 8.5a5.5 5.5 0 01-7-7 6 6 0 107 7z" />
+          </svg>
+        </button>
         <div class="d-flex align-items-center gap-3">
           <div
             id="pwa-install-btn"
@@ -138,129 +171,6 @@
 
               <!-- Live filter label -->
               <div class="live-filter-label" id="live-filter-label"></div>
-            </div>
-
-            <!-- Cute emotion strip -->
-            <div class="mood-bar">
-              <span onclick="setMood('happy')" class="mood active" title="happy"
-                >happy</span
-              >
-              <span onclick="setMood('dreamy')" class="mood" title="dreamy"
-                >dreamy</span
-              >
-              <span onclick="setMood('moody')" class="mood" title="moody"
-                >moody</span
-              >
-              <span onclick="setMood('retro')" class="mood" title="retro"
-                >retro</span
-              >
-              <span onclick="setMood('y2k')" class="mood" title="y2k">y2k</span>
-            </div>
-
-            <!-- Filters -->
-            <div class="section-block">
-              <div class="section-label">Filter</div>
-              <div class="filter-bar" id="filter-bar">
-                <button
-                  class="filter-btn active"
-                  data-filter="none"
-                  onclick="setFilter('none', this)"
-                >
-                  None
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="bw"
-                  onclick="setFilter('bw', this)"
-                >
-                  B&amp;W
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="sepia"
-                  onclick="setFilter('sepia', this)"
-                >
-                  Sepia
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="vivid"
-                  onclick="setFilter('vivid', this)"
-                >
-                  Vivid
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="fade"
-                  onclick="setFilter('fade', this)"
-                >
-                  Fade
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="noir"
-                  onclick="setFilter('noir', this)"
-                >
-                  Noir
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="warm"
-                  onclick="setFilter('warm', this)"
-                >
-                  Warm
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="disposable"
-                  onclick="setFilter('disposable', this)"
-                >
-                  Disposable
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="kodak"
-                  onclick="setFilter('kodak', this)"
-                >
-                  Kodak
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="fujifilm"
-                  onclick="setFilter('fujifilm', this)"
-                >
-                  Fujifilm
-                </button>
-                <button
-                  class="filter-btn"
-                  data-filter="y2k"
-                  onclick="setFilter('y2k', this)"
-                >
-                  Y2K Cam
-                </button>
-              </div>
-            </div>
-
-            <!-- Layout selector (mobile) -->
-            <div class="section-block d-lg-none">
-              <div class="section-label">Layout</div>
-              <div id="layout-bar-mobile" class="layout-bar"></div>
-            </div>
-
-            <!-- Frame selector (mobile) -->
-            <div class="section-block d-lg-none">
-              <div class="section-label">
-                Frame — <span class="text-pink">preview updates live</span>
-              </div>
-              <div class="frames-grid" id="frames-grid-mobile"></div>
-              <!-- Live strip preview (mobile) -->
-              <div class="strip-preview-wrap" id="strip-preview-mobile">
-                <div class="strip-preview-label">Strip preview</div>
-                <canvas
-                  id="strip-preview-canvas-mobile"
-                  class="strip-preview-canvas"
-                ></canvas>
-              </div>
             </div>
 
             <!-- Controls -->
@@ -393,6 +303,127 @@
               </div>
             </div>
 
+            <!-- Cute emotion strip -->
+            <div class="mood-bar">
+              <span onclick="setMood('happy')" class="mood active" title="happy"
+                >happy</span
+              >
+              <span onclick="setMood('dreamy')" class="mood" title="dreamy"
+                >dreamy</span
+              >
+              <span onclick="setMood('moody')" class="mood" title="moody"
+                >moody</span
+              >
+              <span onclick="setMood('retro')" class="mood" title="retro"
+                >retro</span
+              >
+              <span onclick="setMood('y2k')" class="mood" title="y2k">y2k</span>
+            </div>
+
+            <!-- Filters -->
+            <div class="section-block">
+              <div class="section-label">Filter</div>
+              <div class="filter-bar" id="filter-bar">
+                <button
+                  class="filter-btn active"
+                  data-filter="none"
+                  onclick="setFilter('none', this)"
+                >
+                  None
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="bw"
+                  onclick="setFilter('bw', this)"
+                >
+                  B&amp;W
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="sepia"
+                  onclick="setFilter('sepia', this)"
+                >
+                  Sepia
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="vivid"
+                  onclick="setFilter('vivid', this)"
+                >
+                  Vivid
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="fade"
+                  onclick="setFilter('fade', this)"
+                >
+                  Fade
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="noir"
+                  onclick="setFilter('noir', this)"
+                >
+                  Noir
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="warm"
+                  onclick="setFilter('warm', this)"
+                >
+                  Warm
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="disposable"
+                  onclick="setFilter('disposable', this)"
+                >
+                  Disposable
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="kodak"
+                  onclick="setFilter('kodak', this)"
+                >
+                  Kodak
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="fujifilm"
+                  onclick="setFilter('fujifilm', this)"
+                >
+                  Fujifilm
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="y2k"
+                  onclick="setFilter('y2k', this)"
+                >
+                  Y2K Cam
+                </button>
+              </div>
+            </div>
+
+            <!-- Layout selector (mobile) -->
+            <div class="section-block d-lg-none">
+              <div class="section-label">Layout</div>
+              <div id="layout-bar-mobile" class="layout-bar"></div>
+            </div>
+
+            <!-- Frame selector (mobile) -->
+            <div class="section-block d-lg-none">
+              <div class="section-label">Frame</div>
+              <div class="frames-grid" id="frames-grid-mobile"></div>
+              <!-- Live strip preview (mobile) -->
+              <!-- <div class="strip-preview-wrap" id="strip-preview-mobile">
+                <div class="strip-preview-label">Strip preview</div>
+                <canvas
+                  id="strip-preview-canvas-mobile"
+                  class="strip-preview-canvas"
+                ></canvas>
+              </div> -->
+            </div>
+
             <!-- Mobile strip -->
             <div class="section-block d-lg-none">
               <div class="section-label">
@@ -413,19 +444,16 @@
 
             <!-- Frame -->
             <div class="sidebar-section">
-              <div class="section-label">
-                Frame — <span class="text-pink">live preview below</span>
-              </div>
+              <div class="section-label">Frame</div>
               <div class="frames-grid" id="frames-grid-desktop"></div>
 
-              <!-- Live strip preview (desktop) -->
-              <div class="strip-preview-wrap mt-3" id="strip-preview-desktop">
+              <!-- <div class="strip-preview-wrap mt-3" id="strip-preview-desktop">
                 <div class="strip-preview-label">Strip preview</div>
                 <canvas
                   id="strip-preview-canvas-desktop"
                   class="strip-preview-canvas"
                 ></canvas>
-              </div>
+              </div> -->
             </div>
 
             <!-- Strip -->

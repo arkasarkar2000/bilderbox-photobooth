@@ -35,6 +35,28 @@ if (isIOS && !isStandalone) {
   document.getElementById("ios-hint").style.display = "inline-flex";
 }
 
+// ─── Theme ───
+function toggleTheme() {
+  const isLight = document.body.classList.toggle("light-mode");
+  localStorage.setItem("bb-theme", isLight ? "light" : "dark");
+  document.getElementById("theme-icon-dark").style.display = isLight
+    ? "none"
+    : "block";
+  document.getElementById("theme-icon-light").style.display = isLight
+    ? "block"
+    : "none";
+}
+
+// apply saved preference on load — default is dark
+(function () {
+  const saved = localStorage.getItem("bb-theme");
+  if (saved === "light") {
+    document.body.classList.add("light-mode");
+    document.getElementById("theme-icon-dark").style.display = "none";
+    document.getElementById("theme-icon-light").style.display = "block";
+  }
+})();
+
 /* ─────────────────────────────────────────
    Filter definitions
 ───────────────────────────────────────── */
@@ -214,22 +236,49 @@ function buildFrameGrid(container) {
    Camera
 ───────────────────────────────────────── */
 async function startCamera() {
+  // first attempt — high res ideal
+  const constraints = {
+    video: {
+      width: { ideal: 3840 },
+      height: { ideal: 2160 },
+      facingMode: "user",
+    },
+    audio: false,
+  };
+
   try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: { ideal: 3840, min: 1280 },
-        height: { ideal: 2160, min: 960 },
-        facingMode: "user",
-      },
-      audio: false,
-    });
-    video.srcObject = stream;
-    document.getElementById("startup").style.display = "none";
-    captureBtn.disabled = false;
-    burstBtn.disabled = false;
-  } catch {
-    showToast("Camera access denied or unavailable");
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+  } catch (err) {
+    // if overconstrained or device busy, try plain basic request
+    if (
+      err.name === "OverconstrainedError" ||
+      err.name === "NotReadableError" ||
+      err.name === "NotFoundError"
+    ) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: false,
+        });
+      } catch (fallbackErr) {
+        showToast(
+          "Camera access denied — please allow camera in browser settings",
+        );
+        return;
+      }
+    } else {
+      // actual permission denial
+      showToast(
+        "Camera access denied — please allow camera in browser settings",
+      );
+      return;
+    }
   }
+
+  video.srcObject = stream;
+  document.getElementById("startup").style.display = "none";
+  captureBtn.disabled = false;
+  burstBtn.disabled = false;
 }
 
 /* ─────────────────────────────────────────
@@ -371,7 +420,10 @@ function grabFrame() {
 
   const f = FILTERS[currentFilter] || FILTERS.none;
   previewCtx.filter = f.css || "none";
-  previewCtx.drawImage(video, 0, 0, w, h);
+  previewCtx.save();
+  previewCtx.scale(-1, 1);
+  previewCtx.drawImage(video, -w, 0, w, h);
+  previewCtx.restore();
   previewCtx.filter = "none";
 
   paintFrame(previewCtx, w, h, currentFrame);
@@ -449,7 +501,7 @@ function composeStrip(cvs, ctx2, alive, layout, forShare) {
     /* vertical strip — hard cap at 4 photos */
     const stripPhotos = alive.slice(0, 4);
     const iw = 420,
-      ih = Math.round((420 * 3) / 4);
+      ih = Math.round((420 * 4) / 3);
     const totalH =
       labelH +
       pad * 2 +
@@ -640,7 +692,7 @@ function refreshStripPreview() {
 function addPhoto(dataUrl) {
   const alive = photos.filter((p) => p !== null);
   if (currentLayout === "strip4" && alive.length >= 4) {
-    showToast("Strip is full — switch to grid or film reel for more photos");
+    showToast("Strip full (4/4) — clear to start again or switch layout");
     return;
   }
   const idx = photos.length;

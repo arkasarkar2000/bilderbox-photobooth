@@ -1,147 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terms of Service — Bilderbox</title>
-  <meta name="description" content="Bilderbox terms of service. Simple, fair, and honest." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="pages.css" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms of Service — Bilderbox</title>
+    <meta
+      name="description"
+      content="Bilderbox terms of service. Simple, fair, and honest."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="pages.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <a href="index.html" class="logo">bilder<span>box</span></a>
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        onclick="toggleTheme()"
+        title="Toggle light/dark mode"
+      >
+        <svg
+          id="theme-icon-dark"
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="8" cy="8" r="3.5" />
+          <path
+            d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"
+          />
+        </svg>
+        <svg
+          id="theme-icon-light"
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          style="display: none"
+        >
+          <path d="M13.5 8.5a5.5 5.5 0 01-7-7 6 6 0 107 7z" />
+        </svg>
+      </button>
+      <a href="index.html" class="back-link">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path d="M8 2L4 6l4 4" />
+        </svg>
+        Back to app
+      </a>
+    </header>
 
-  <header class="page-header">
-    <a href="index.html" class="logo">bilder<span>box</span></a>
-    <a href="index.html" class="back-link">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M8 2L4 6l4 4"/>
-      </svg>
-      Back to app
-    </a>
-  </header>
+    <div class="page-wrap">
+      <div class="page-hero">
+        <div class="page-tag">Legal</div>
+        <h1 class="page-title">Terms of Service</h1>
+        <div class="page-meta">
+          Last updated: March 2026 &nbsp;·&nbsp; Effective immediately
+        </div>
+      </div>
 
-  <div class="page-wrap">
+      <div class="highlight-box">
+        <strong>Plain English summary:</strong> Use Bilderbox to take photos and
+        have fun. Don't use it for anything harmful or illegal. Your photos are
+        yours. We provide the app as-is with no guarantees. That's really it.
+      </div>
 
-    <div class="page-hero">
-      <div class="page-tag">Legal</div>
-      <h1 class="page-title">Terms of Service</h1>
-      <div class="page-meta">Last updated: March 2026 &nbsp;·&nbsp; Effective immediately</div>
-    </div>
+      <nav class="toc">
+        <div class="toc-label">Contents</div>
+        <ol>
+          <li><a href="#acceptance">Acceptance of terms</a></li>
+          <li><a href="#description">Description of service</a></li>
+          <li><a href="#use">Acceptable use</a></li>
+          <li><a href="#ownership">Your content</a></li>
+          <li><a href="#ip">Intellectual property</a></li>
+          <li><a href="#disclaimer">Disclaimer of warranties</a></li>
+          <li><a href="#liability">Limitation of liability</a></li>
+          <li><a href="#changes">Changes to the service</a></li>
+          <li><a href="#governing">Governing law</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ol>
+      </nav>
 
-    <div class="highlight-box">
-      <strong>Plain English summary:</strong> Use Bilderbox to take photos and have fun. Don't use it for anything harmful or illegal. Your photos are yours. We provide the app as-is with no guarantees. That's really it.
-    </div>
+      <div class="doc-section" id="acceptance">
+        <h2>1. Acceptance of terms</h2>
+        <p>
+          By accessing or using Bilderbox ("the App", "the Service"), you agree
+          to be bound by these Terms of Service. If you do not agree to these
+          terms, please do not use the App.
+        </p>
+        <p>These terms apply to all visitors and users of Bilderbox.</p>
+      </div>
 
-    <nav class="toc">
-      <div class="toc-label">Contents</div>
-      <ol>
-        <li><a href="#acceptance">Acceptance of terms</a></li>
-        <li><a href="#description">Description of service</a></li>
-        <li><a href="#use">Acceptable use</a></li>
-        <li><a href="#ownership">Your content</a></li>
-        <li><a href="#ip">Intellectual property</a></li>
-        <li><a href="#disclaimer">Disclaimer of warranties</a></li>
-        <li><a href="#liability">Limitation of liability</a></li>
-        <li><a href="#changes">Changes to the service</a></li>
-        <li><a href="#governing">Governing law</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ol>
-    </nav>
+      <div class="doc-section" id="description">
+        <h2>2. Description of service</h2>
+        <p>
+          Bilderbox is a browser-based photobooth application. It provides
+          real-time camera access, photo filters, layout options, and sharing
+          tools — all processed locally on your device. No account,
+          subscription, or payment is required.
+        </p>
+        <p>
+          The Service is provided free of charge and may be updated, modified,
+          or discontinued at any time without prior notice.
+        </p>
+      </div>
 
-    <div class="doc-section" id="acceptance">
-      <h2>1. Acceptance of terms</h2>
-      <p>By accessing or using Bilderbox ("the App", "the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App.</p>
-      <p>These terms apply to all visitors and users of Bilderbox.</p>
-    </div>
+      <div class="doc-section" id="use">
+        <h2>3. Acceptable use</h2>
+        <p>
+          You agree to use Bilderbox only for lawful purposes. You must not use
+          the App to:
+        </p>
+        <ul>
+          <li>Capture, produce, or distribute illegal content of any kind</li>
+          <li>
+            Photograph or record individuals without their knowledge or consent
+            where legally required
+          </li>
+          <li>
+            Create content that is harassing, defamatory, obscene, or
+            threatening
+          </li>
+          <li>
+            Attempt to circumvent, reverse-engineer, or interfere with the App's
+            functionality
+          </li>
+          <li>
+            Use the App in a way that could damage, disable, or impair it for
+            other users
+          </li>
+        </ul>
+        <p>
+          We reserve the right to discontinue access to the Service for users in
+          breach of these terms, where technically possible.
+        </p>
+      </div>
 
-    <div class="doc-section" id="description">
-      <h2>2. Description of service</h2>
-      <p>Bilderbox is a browser-based photobooth application. It provides real-time camera access, photo filters, layout options, and sharing tools — all processed locally on your device. No account, subscription, or payment is required.</p>
-      <p>The Service is provided free of charge and may be updated, modified, or discontinued at any time without prior notice.</p>
-    </div>
+      <div class="doc-section" id="ownership">
+        <h2>4. Your content</h2>
+        <p>
+          All photos you capture using Bilderbox belong entirely to you. We
+          claim no ownership, licence, or right to use any content you create
+          with the App.
+        </p>
+        <p>
+          Because Bilderbox operates entirely client-side and never transmits
+          your photos to any server, we have no access to your content
+          whatsoever. You are solely responsible for any content you choose to
+          share, download, or publish using the sharing features.
+        </p>
+      </div>
 
-    <div class="doc-section" id="use">
-      <h2>3. Acceptable use</h2>
-      <p>You agree to use Bilderbox only for lawful purposes. You must not use the App to:</p>
-      <ul>
-        <li>Capture, produce, or distribute illegal content of any kind</li>
-        <li>Photograph or record individuals without their knowledge or consent where legally required</li>
-        <li>Create content that is harassing, defamatory, obscene, or threatening</li>
-        <li>Attempt to circumvent, reverse-engineer, or interfere with the App's functionality</li>
-        <li>Use the App in a way that could damage, disable, or impair it for other users</li>
-      </ul>
-      <p>We reserve the right to discontinue access to the Service for users in breach of these terms, where technically possible.</p>
-    </div>
+      <div class="doc-section" id="ip">
+        <h2>5. Intellectual property</h2>
+        <p>
+          The Bilderbox name, design, codebase, and all associated creative
+          elements are the intellectual property of Bilderbox and its operators.
+          You may not copy, reproduce, or distribute any part of the application
+          without permission.
+        </p>
+        <p>
+          Third-party libraries used by Bilderbox (Bootstrap, Google Fonts,
+          QRCode.js) are subject to their respective open-source licences.
+        </p>
+      </div>
 
-    <div class="doc-section" id="ownership">
-      <h2>4. Your content</h2>
-      <p>All photos you capture using Bilderbox belong entirely to you. We claim no ownership, licence, or right to use any content you create with the App.</p>
-      <p>Because Bilderbox operates entirely client-side and never transmits your photos to any server, we have no access to your content whatsoever. You are solely responsible for any content you choose to share, download, or publish using the sharing features.</p>
-    </div>
+      <div class="doc-section" id="disclaimer">
+        <h2>6. Disclaimer of warranties</h2>
+        <p>
+          Bilderbox is provided "as is" and "as available" without warranties of
+          any kind, either express or implied. We do not warrant that:
+        </p>
+        <ul>
+          <li>
+            The App will be uninterrupted, error-free, or free of harmful
+            components
+          </li>
+          <li>
+            Results obtained from using the App will be accurate or reliable
+          </li>
+          <li>Camera access will function on all devices and browsers</li>
+          <li>The App will be available at any particular time</li>
+        </ul>
+        <p>Your use of the App is at your own risk.</p>
+      </div>
 
-    <div class="doc-section" id="ip">
-      <h2>5. Intellectual property</h2>
-      <p>The Bilderbox name, design, codebase, and all associated creative elements are the intellectual property of Bilderbox and its operators. You may not copy, reproduce, or distribute any part of the application without permission.</p>
-      <p>Third-party libraries used by Bilderbox (Bootstrap, Google Fonts, QRCode.js) are subject to their respective open-source licences.</p>
-    </div>
+      <div class="doc-section" id="liability">
+        <h2>7. Limitation of liability</h2>
+        <p>
+          To the fullest extent permitted by applicable law, Bilderbox and its
+          operators shall not be liable for any indirect, incidental, special,
+          consequential, or punitive damages arising from your use of or
+          inability to use the Service — including but not limited to loss of
+          data, loss of profits, or loss of goodwill.
+        </p>
+        <p>
+          In jurisdictions that do not allow the exclusion or limitation of
+          certain warranties or damages, our liability is limited to the maximum
+          extent permitted by law.
+        </p>
+      </div>
 
-    <div class="doc-section" id="disclaimer">
-      <h2>6. Disclaimer of warranties</h2>
-      <p>Bilderbox is provided "as is" and "as available" without warranties of any kind, either express or implied. We do not warrant that:</p>
-      <ul>
-        <li>The App will be uninterrupted, error-free, or free of harmful components</li>
-        <li>Results obtained from using the App will be accurate or reliable</li>
-        <li>Camera access will function on all devices and browsers</li>
-        <li>The App will be available at any particular time</li>
-      </ul>
-      <p>Your use of the App is at your own risk.</p>
-    </div>
+      <div class="doc-section" id="changes">
+        <h2>8. Changes to the service</h2>
+        <p>
+          We reserve the right to modify, suspend, or discontinue any part of
+          the Service at any time without notice. We may also update these Terms
+          of Service periodically. The "Last updated" date at the top of this
+          page will reflect any changes.
+        </p>
+        <p>
+          Continued use of Bilderbox after changes are posted constitutes your
+          acceptance of the revised terms.
+        </p>
+      </div>
 
-    <div class="doc-section" id="liability">
-      <h2>7. Limitation of liability</h2>
-      <p>To the fullest extent permitted by applicable law, Bilderbox and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the Service — including but not limited to loss of data, loss of profits, or loss of goodwill.</p>
-      <p>In jurisdictions that do not allow the exclusion or limitation of certain warranties or damages, our liability is limited to the maximum extent permitted by law.</p>
-    </div>
+      <div class="doc-section" id="governing">
+        <h2>9. Governing law</h2>
+        <p>
+          These terms shall be governed by and construed in accordance with
+          applicable law. Any disputes arising under these terms shall be
+          resolved in the appropriate jurisdiction.
+        </p>
+      </div>
 
-    <div class="doc-section" id="changes">
-      <h2>8. Changes to the service</h2>
-      <p>We reserve the right to modify, suspend, or discontinue any part of the Service at any time without notice. We may also update these Terms of Service periodically. The "Last updated" date at the top of this page will reflect any changes.</p>
-      <p>Continued use of Bilderbox after changes are posted constitutes your acceptance of the revised terms.</p>
-    </div>
-
-    <div class="doc-section" id="governing">
-      <h2>9. Governing law</h2>
-      <p>These terms shall be governed by and construed in accordance with applicable law. Any disputes arising under these terms shall be resolved in the appropriate jurisdiction.</p>
-    </div>
-
-    <div class="doc-section" id="contact">
-      <h2>10. Contact</h2>
-      <p>Questions about these terms? We're happy to clarify.</p>
-      <div class="contact-card">
-        <dl>
-          <div class="contact-row">
-            <dt>App</dt>
-            <dd>Bilderbox</dd>
-          </div>
-          <!-- <div class="contact-row">
+      <div class="doc-section" id="contact">
+        <h2>10. Contact</h2>
+        <p>Questions about these terms? We're happy to clarify.</p>
+        <div class="contact-card">
+          <dl>
+            <div class="contact-row">
+              <dt>App</dt>
+              <dd>Bilderbox</dd>
+            </div>
+            <!-- <div class="contact-row">
             <dt>Email</dt>
             <dd><a href="mailto:hello@bilderbox.app">hello@bilderbox.app</a></dd>
           </div> -->
-        </dl>
+          </dl>
+        </div>
       </div>
+
+      <footer class="page-footer">
+        <nav class="footer-nav">
+          <a href="index.html">App</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="footer-copy">&copy; 2026 Bilderbox</div>
+      </footer>
     </div>
-
-    <footer class="page-footer">
-      <nav class="footer-nav">
-        <a href="index.html">App</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="about.html">About</a>
-      </nav>
-      <div class="footer-copy">&copy; 2026 Bilderbox</div>
-    </footer>
-
-  </div>
-</body>
+  </body>
 </html>
