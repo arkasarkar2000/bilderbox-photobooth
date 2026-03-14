@@ -19,6 +19,8 @@
   --radius2: 14px;
 }
 
+
+
 /* ─── Light mode overrides ─── */
 body.light-mode {
   --bg:        #fdf6f9;
@@ -61,7 +63,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(14,11,16,0.93);
+  background: var(--bg);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   padding: 0 1.5rem;

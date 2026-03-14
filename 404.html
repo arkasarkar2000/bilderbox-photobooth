@@ -204,5 +204,21 @@
         </div>
       </div>
     </div>
+    <script>
+      // apply saved theme on page load
+      if (localStorage.getItem("bb-theme") === "light") {
+        document.body.classList.add("light-mode");
+      }
+      function toggleTheme() {
+        const isLight = document.body.classList.toggle("light-mode");
+        localStorage.setItem("bb-theme", isLight ? "light" : "dark");
+        document.getElementById("theme-icon-dark").style.display = isLight
+          ? "none"
+          : "block";
+        document.getElementById("theme-icon-light").style.display = isLight
+          ? "block"
+          : "none";
+      }
+    </script>
   </body>
 </html>

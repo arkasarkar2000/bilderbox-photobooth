@@ -1,9 +1,10 @@
-/* Bilderbox — service-worker.js v3 */
-const CACHE = 'bilderbox-v3'
+/* Bilderbox — service-worker.js v4 */
+const CACHE = 'bilderbox-v4'
 
 /* static assets only — no HTML, so updates always come through */
 const STATIC = [
   '/css/style.css',
+  '/css/pages.css',
   '/js/app.js',
   '/manifest.json',
   '/icons/icon-192.png',
