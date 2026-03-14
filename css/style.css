@@ -150,6 +150,9 @@ body {
     padding: 1.5rem;
     gap: 1.35rem;
   }
+  .controls-row {
+    flex-direction: row;
+  }
 }
 @media (min-width: 1400px) {
   .main-col {
@@ -557,6 +560,8 @@ body {
   flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
+  flex-direction: column; /* add this */
+  align-items: flex-start;
 }
 
 .timer-btns {
