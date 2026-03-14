@@ -396,6 +396,7 @@ function setFilter(id, btn) {
     .querySelectorAll(".filter-btn")
     .forEach((b) => b.classList.remove("active"));
   if (btn) btn.classList.add("active");
+  if (stillImage) drawStillWithCurrentSettings();
 }
 
 /* ── Layout ── */
@@ -417,6 +418,7 @@ function setFrame(id) {
   document
     .querySelectorAll(".frame-thumb")
     .forEach((b) => b.classList.toggle("active", b.dataset.frameId === id));
+  if (stillImage) drawStillWithCurrentSettings();
 }
 
 /* ── Mood ── */
@@ -455,8 +457,8 @@ function updateCaptureState() {
   captureBtn.disabled = !hasStream || full;
   burstBtn.disabled = !hasStream || full;
 
-  const uploadBtn = document.getElementById('upload-btn')
-  if (uploadBtn) uploadBtn.disabled = full
+  const uploadBtn = document.getElementById("upload-btn");
+  if (uploadBtn) uploadBtn.disabled = full;
   if (full)
     showToast(`${cap}/${cap} photos — clear to shoot more or switch layout`);
 }
@@ -508,11 +510,12 @@ async function startBurst() {
 }
 
 /* ── Upload existing image ── */
+let stillImage = null; /* holds the raw uploaded Image object */
+
 function triggerUpload() {
   const alive = photos.filter((p) => p !== null);
-  const cap = LAYOUT_CAPS[currentLayout];
-  if (alive.length >= cap) {
-    showToast(`Strip full — clear or switch layout to add more`);
+  if (alive.length >= LAYOUT_CAPS[currentLayout]) {
+    showToast("Strip full — clear or switch layout to add more");
     return;
   }
   document.getElementById("upload-input").click();
@@ -521,66 +524,142 @@ function triggerUpload() {
 async function handleUpload(e) {
   const files = Array.from(e.target.files);
   if (!files.length) return;
+  e.target.value = ""; /* reset so same file can be picked again */
 
+  /* if multiple files picked, load them all directly without preview
+     (previewing one at a time for multi-select would be too clunky) */
   const alive = photos.filter((p) => p !== null);
   const cap = LAYOUT_CAPS[currentLayout];
   const slots = cap - alive.length;
-  const toLoad = files.slice(0, slots);
 
-  if (files.length > slots) {
-    showToast(
-      `Only ${slots} slot${slots === 1 ? "" : "s"} left — adding first ${slots}`,
-    );
-  }
-
-  for (const file of toLoad) {
-    try {
-      const dataUrl = await processUploadedImage(file);
-      addPhoto(dataUrl);
-      await sleep(
-        80,
-      ); /* small delay so strip renders cleanly between additions */
-    } catch (err) {
-      showToast(`Could not load ${file.name}`);
-      console.error("Upload error:", err);
+  if (files.length > 1) {
+    /* multi-file: bake current filter/frame and add directly */
+    const toLoad = files.slice(0, slots);
+    if (files.length > slots)
+      showToast(
+        `Only ${slots} slot${slots === 1 ? "" : "s"} left — adding first ${slots}`,
+      );
+    for (const file of toLoad) {
+      try {
+        const dataUrl = await bakeUploadedImage(file);
+        addPhoto(dataUrl);
+        await sleep(80);
+      } catch (err) {
+        showToast(`Could not load ${file.name}`);
+        console.error("Upload error:", err);
+      }
     }
+    return;
   }
 
-  /* reset input so same file can be re-uploaded if needed */
-  e.target.value = "";
+  /* single file: show in viewfinder for filter/frame preview */
+  try {
+    const img = await loadFileAsImage(files[0]);
+    loadStillIntoViewfinder(img);
+  } catch {
+    showToast("Could not load image — try another file");
+  }
 }
 
-function processUploadedImage(file) {
+function loadFileAsImage(file) {
   return new Promise((resolve, reject) => {
     if (!file.type.startsWith("image/")) {
-      reject(new Error("Not an image file"));
+      reject(new Error("Not an image"));
       return;
     }
-
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error("FileReader failed"));
+    reader.onerror = () => reject(new Error("Read failed"));
     reader.onload = (ev) => {
       const img = new Image();
-      img.onerror = () => reject(new Error("Image failed to load"));
-      img.onload = () => {
-        /* draw onto the preview canvas at native resolution */
-        const w = img.naturalWidth;
-        const h = img.naturalHeight;
-        previewCvs.width = w;
-        previewCvs.height = h;
-
-        const f = FILTERS[currentFilter] || FILTERS.none;
-        previewCtx.filter = f.css || "none";
-        previewCtx.drawImage(img, 0, 0, w, h); /* no mirror flip for uploads */
-        previewCtx.filter = "none";
-        paintFrame(previewCtx, w, h, currentFrame);
-
-        resolve(previewCvs.toDataURL("image/jpeg", 0.95));
-      };
+      img.onerror = () => reject(new Error("Image failed to decode"));
+      img.onload = () => resolve(img);
       img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
   });
+}
+
+function loadStillIntoViewfinder(img) {
+  stillImage = img;
+
+  /* pause live camera feed visually by hiding video, showing canvas */
+  video.style.opacity = "0";
+
+  /* draw the still onto the preview canvas so the user sees it */
+  drawStillWithCurrentSettings();
+
+  /* show canvas on top of video */
+  previewCvs.style.opacity = "1";
+  previewCvs.style.zIndex = "5";
+
+  /* show confirm bar */
+  document.getElementById("still-confirm").style.display = "block";
+  showToast("Pick a filter and frame, then tap Add to strip");
+}
+
+function drawStillWithCurrentSettings() {
+  if (!stillImage) return;
+  const w = stillImage.naturalWidth;
+  const h = stillImage.naturalHeight;
+  previewCvs.width = w;
+  previewCvs.height = h;
+
+  const f = FILTERS[currentFilter] || FILTERS.none;
+  previewCtx.filter = f.css || "none";
+  previewCtx.drawImage(stillImage, 0, 0, w, h); /* no mirror for uploads */
+  previewCtx.filter = "none";
+  paintFrame(previewCtx, w, h, currentFrame);
+}
+
+function confirmStill() {
+  if (!stillImage) return;
+  drawStillWithCurrentSettings(); /* redraw with final chosen filter/frame */
+  const dataUrl = previewCvs.toDataURL("image/jpeg", 0.95);
+  addPhoto(dataUrl);
+  cancelStill();
+}
+
+function cancelStill() {
+  stillImage = null;
+  video.style.opacity = "1";
+  previewCvs.style.opacity = "0";
+  previewCvs.style.zIndex = "";
+  document.getElementById("still-confirm").style.display = "none";
+}
+function drawStillWithCurrentSettings() {
+  if (!stillImage) return;
+  /* always render at a fixed 3:4 canvas — centre crop the source */
+  const targetW = 1080;
+  const targetH = Math.round((targetW * 4) / 3);
+  previewCvs.width = targetW;
+  previewCvs.height = targetH;
+
+  const f = FILTERS[currentFilter] || FILTERS.none;
+  previewCtx.filter = f.css || "none";
+
+  /* centre crop source to 3:4 */
+  const { sx, sy, sw, sh } = centreCrop(
+    stillImage.naturalWidth,
+    stillImage.naturalHeight,
+    targetW,
+    targetH,
+  );
+  previewCtx.drawImage(stillImage, sx, sy, sw, sh, 0, 0, targetW, targetH);
+  previewCtx.filter = "none";
+  paintFrame(previewCtx, targetW, targetH, currentFrame);
+}
+
+function confirmStill() {
+  if (!stillImage) return;
+  drawStillWithCurrentSettings();
+  const dataUrl = previewCvs.toDataURL("image/jpeg", 0.95);
+  addPhoto(dataUrl);
+  cancelStill();
+}
+
+async function bakeUploadedImage(file) {
+  const img = await loadFileAsImage(file);
+  return normalizeAndBakeImage(img);
 }
 
 async function countdown(secs) {
@@ -1296,4 +1375,47 @@ function showToast(msg) {
     toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
   } catch {}
 }
-updateCaptureState()
+
+/* centre-crop source dimensions to match a target aspect ratio */
+function centreCrop(srcW, srcH, dstW, dstH) {
+  const srcRatio = srcW / srcH;
+  const dstRatio = dstW / dstH;
+  let sx = 0,
+    sy = 0,
+    sw = srcW,
+    sh = srcH;
+  if (srcRatio > dstRatio) {
+    /* source is wider than target — crop sides */
+    sw = srcH * dstRatio;
+    sx = (srcW - sw) / 2;
+  } else {
+    /* source is taller than target — crop top/bottom */
+    sh = srcW / dstRatio;
+    sy = (srcH - sh) / 2;
+  }
+  return { sx, sy, sw, sh };
+}
+
+/* normalize any image to 3:4 with current filter and frame baked in */
+function normalizeAndBakeImage(img) {
+  const targetW = 1080;
+  const targetH = Math.round((targetW * 4) / 3);
+  previewCvs.width = targetW;
+  previewCvs.height = targetH;
+
+  const f = FILTERS[currentFilter] || FILTERS.none;
+  previewCtx.filter = f.css || "none";
+
+  const { sx, sy, sw, sh } = centreCrop(
+    img.naturalWidth,
+    img.naturalHeight,
+    targetW,
+    targetH,
+  );
+  previewCtx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+  previewCtx.filter = "none";
+  paintFrame(previewCtx, targetW, targetH, currentFrame);
+
+  return previewCvs.toDataURL("image/jpeg", 0.95);
+}
+updateCaptureState();

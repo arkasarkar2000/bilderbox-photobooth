@@ -326,6 +326,43 @@
             </svg>
             <span id="compat-warn-msg"></span>
           </div>
+
+          <!-- Still image preview overlay — shown when an uploaded image is loaded -->
+          <div id="still-confirm" class="still-confirm" style="display: none">
+            <div class="still-confirm-inner">
+              <span class="still-label"
+                >Adjust filter &amp; frame, then add</span
+              >
+              <div class="still-actions">
+                <button class="btn-bb btn-pink" onclick="confirmStill()">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M2 8l4 4 8-8" />
+                  </svg>
+                  Add to strip
+                </button>
+                <button class="btn-bb" onclick="cancelStill()">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M3 3l10 10M13 3L3 13" />
+                  </svg>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Mobile strip -->
