@@ -1,2 +1,30 @@
-/*
+# HTML — always revalidate
+/*.html
   Cache-Control: no-cache, must-revalidate
+
+/
+  Cache-Control: no-cache, must-revalidate
+
+# Static assets — cache for 1 year (they're versioned by SW cache name)
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Manifest and SW — revalidate often
+/manifest.json
+  Cache-Control: no-cache, must-revalidate
+
+/service-worker.js
+  Cache-Control: no-cache, must-revalidate
+
+# Security headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=self, microphone=()

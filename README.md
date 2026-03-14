@@ -4,23 +4,40 @@
 
 A free, privacy-first photobooth web app with film filters, multiple layouts, and sharing tools. No backend, no accounts, no data collection. Everything runs client-side.
 
-<!-- Live demo: [bilderbox.netlify.app](https://bilderbox.netlify.app) -->
+Live: [bilderbox.netlify.app](https://bilderbox.netlify.app) ← update this with your actual URL
 
 ---
 
 ## Features
 
-- **Real-time camera** with single shot and burst mode (×4)
-- **Self-timer** — 3s, 5s, 10s countdown
-- **11 filters** — B&W, Sepia, Vivid, Fade, Noir, Warm, Disposable, Kodak, Fujifilm, Y2K Cam
-- **4 strip layouts** — Classic strip, 2×2 grid, Film reel, Polaroid scattered
-- **7 frames** — Classic, Dark, Gold, Pink, Polaroid, Film, None
-- **Mood presets** — happy, dreamy, moody, retro, y2k
-- **Live strip preview** when selecting frames
-- **Share hub** — download, native share sheet, Instagram, QR code
-- **Reel / Story format** (9:16) and square grid (1:1) for social media
-- **PWA** — installs on any device, works offline after first load
-- **Zero data collected** — photos never leave your device
+- Real-time camera with single shot and burst mode (×4)
+- Self-timer — 3s, 5s, 10s countdown
+- 11 filters — B&W, Sepia, Vivid, Fade, Noir, Warm, Disposable, Kodak, Fujifilm, Y2K Cam
+- 4 strip layouts — Classic strip (4), 2×2 grid (6), Film reel (8), Polaroid scattered (6)
+- 7 frames — Classic, Dark, Gold, Pink, Polaroid, Film, None
+- Mood presets — happy, dreamy, moody, retro, y2k
+- Individual photos saved as JPEG (fast, small); final strip saved as PNG (lossless)
+- Timestamp prompt before saving strip
+- Strip preview modal after saving
+- Share hub — native share, Instagram, QR code, download
+- Light / dark mode (persisted via localStorage)
+- PWA — installs on any device, works offline after first load
+- Zero data collected — photos never leave your device
+- Privacy-respecting analytics via Plausible (no cookies, no personal data)
+
+---
+
+## Browser support
+
+| Browser | Support |
+|---------|---------|
+| Chrome / Edge (desktop + Android) | Full |
+| Safari 16.4+ (iOS + macOS) | Full |
+| Firefox 90+ | Full |
+| Samsung Internet | Full |
+| Opera | Full |
+
+Camera access requires HTTPS. Netlify handles this automatically.
 
 ---
 
@@ -29,17 +46,19 @@ A free, privacy-first photobooth web app with film filters, multiple layouts, an
 ```
 bilderbox/
 ├── index.html            # main app
-├── about.html            # about page
-├── privacy.html          # privacy policy
-├── terms.html            # terms of service
-├── 404.html              # custom 404
-├── footer.html           # footer reference (content is embedded in index.html)
+├── about.html
+├── privacy.html
+├── terms.html
+├── 404.html
 ├── manifest.json         # PWA manifest
-├── service-worker.js     # offline caching
-├── _redirects            # Netlify 404 redirect rule
+├── service-worker.js     # offline caching (v3)
+├── robots.txt
+├── sitemap.xml           # update domain before deploying
+├── _headers              # Netlify cache + security headers
+├── _redirects            # Netlify 404 rule
 ├── css/
 │   ├── style.css         # main app styles
-│   └── pages.css         # shared styles for legal/info pages
+│   └── pages.css         # legal/info page styles
 ├── js/
 │   └── app.js            # all app logic
 └── icons/
@@ -50,71 +69,64 @@ bilderbox/
 
 ---
 
-## Deploying to Netlify
+## Deploy to Netlify
 
-This is a static site with no build step — just drag and drop.
-
-**Option 1 — Netlify Drop**
-
-1. Zip the project folder
-2. Go to [app.netlify.com/drop](https://app.netlify.com/drop)
-3. Drag the zip in
-4. Done
-
-**Option 2 — Git deploy (recommended)**
+**Via Git (recommended)**
 
 1. Push this repo to GitHub
-2. Go to [app.netlify.com](https://app.netlify.com) → Add new site → Import from Git
-3. Select your repo
-4. Build command: *(leave empty)*
-5. Publish directory: `.` (or the folder name if it's a subfolder)
-6. Deploy
+2. Netlify → Add new site → Import from Git → select repo
+3. Build command: *(leave empty)*
+4. Publish directory: `.`
+5. Deploy
 
-**Custom domain**
+**Via drag and drop**
 
-Set your domain in Netlify → Site settings → Domain management. Netlify provides a free TLS certificate automatically.
-
-> Camera access requires `https://` in production. Netlify serves over HTTPS by default so this is handled.
-
-**404 page**
-
-Add a `_redirects` file to your project root with this single line so Netlify serves your custom 404:
-
-```
-/*  /404.html  404
-```
+1. Zip the folder
+2. [app.netlify.com/drop](https://app.netlify.com/drop) → drag zip in
 
 ---
 
-## PWA install
+## Analytics setup (Plausible)
 
-On desktop Chrome/Edge, an "Install app" button appears in the header. On iOS Safari, use Share → Add to Home Screen. Once installed, the app works offline.
+Bilderbox uses [Plausible](https://plausible.io) — a privacy-friendly analytics tool. No cookies, no personal data, GDPR compliant.
+
+1. Create a free account at [plausible.io](https://plausible.io)
+2. Add your site domain
+3. The script tag is already in `index.html` — just update `data-domain` to match your domain:
+
+```html
+<script defer data-domain="YOUR-DOMAIN.netlify.app" src="https://plausible.io/js/script.js"></script>
+```
+
+Plausible has a free 30-day trial. After that it's €9/month. If you want completely free analytics, use [Umami](https://umami.is) (self-hosted on Vercel for free) or just remove the script tag entirely.
+
+---
+
+## Before going live checklist
+
+- [ ] Update `data-domain` in the Plausible script tag in `index.html`
+- [ ] Update domain in `robots.txt` sitemap URL
+- [ ] Update domain in `sitemap.xml`
+- [ ] Update live demo URL in this README
+- [ ] Test camera on iOS Safari and Android Chrome
+- [ ] Test PWA install on both platforms
 
 ---
 
 ## Tech
 
-- HTML5, CSS3, Vanilla JS — no framework, no build step
-- [Bootstrap 5](https://getbootstrap.com) — responsive grid and layout
-- [QRCode.js](https://github.com/davidshimjs/qrcodejs) — QR code generation
-- [Google Fonts](https://fonts.google.com) — Playfair Display, DM Mono, DM Sans
-- Canvas API — photo capture, filter baking, strip composition
-- MediaDevices API — camera access
-- Web Share API — native OS share sheet
-- Service Workers — PWA offline support
+Plain HTML, CSS, and JavaScript — no framework, no build step.
+
+Bootstrap 5 · QRCode.js · Google Fonts · Canvas API · MediaDevices API · Web Share API · Service Workers · Plausible Analytics
 
 ---
 
 ## Privacy
 
-Bilderbox collects no data whatsoever. Photos are processed in browser memory and discarded when the tab is closed. See [privacy.html](privacy.html) for the full policy.
+Bilderbox collects no personal data. Photos are processed in browser memory and gone when you close the tab. Plausible analytics collects only aggregate, anonymous page view data — no cookies, no fingerprinting, no personal identifiers.
 
 ---
 
 ## License
 
-MIT — do whatever you want with it.
-
----
-
-*Bilderbox — from German "Bilder" (pictures) + "box".*
+MIT
