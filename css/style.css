@@ -1293,3 +1293,230 @@ body.light-mode #countdown {
   padding: 0.38rem 0.85rem;
   font-size: 0.78rem;
 }
+
+/* ══════════════════════════════════════
+   v6 ADDITIONS — mobile-first overhaul
+══════════════════════════════════════ */
+
+/* ── Quick actions bar (below camera, always visible) ── */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+}
+
+.capture-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.save-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.save-row .btn-bb,
+.save-row .save-btn,
+.save-row .share-btn {
+  flex: 1;
+  justify-content: center;
+  min-width: 80px;
+}
+
+/* ── Mobile thumbnail strip ── */
+.mobile-thumbnail-bar {
+  width: 100%;
+  overflow: hidden;
+}
+
+.mobile-thumbnail-strip {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-thumbnail-strip:empty {
+  display: none;
+}
+
+.mobile-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 72px;
+  height: 96px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.mobile-thumb:hover,
+.mobile-thumb:active { border-color: var(--pink); }
+
+.mobile-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mobile-thumb-del {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.mobile-thumb-del:hover { background: var(--red); }
+
+/* ── Desktop: hide quick-actions save row, show in ctrl-col ── */
+@media (min-width: 992px) {
+  .save-row { display: none; }
+  .mobile-thumbnail-bar { display: none; }
+  .quick-actions { padding: 0; }
+  .cam-col { padding: 0.75rem; }
+}
+
+/* ── Mobile: ctrl-col improvements ── */
+@media (max-width: 991px) {
+  .workspace {
+    flex-direction: column;
+  }
+  .cam-col {
+    padding: 0.6rem 0.75rem 0;
+  }
+  .ctrl-col {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    overflow-y: visible;
+  }
+  /* hide desktop action buttons on mobile */
+  .action-section.d-none { display: none !important; }
+
+  /* make camera not too tall on mobile */
+  .camera-wrap {
+    max-height: 56vw !important;
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Make control sections scroll horizontally on mobile for compact feel */
+  .filter-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .frames-grid {
+    grid-template-columns: repeat(7, 1fr);
+    overflow-x: auto;
+  }
+}
+
+/* ── Extra small mobile tweaks ── */
+@media (max-width: 480px) {
+  .camera-wrap {
+    border-radius: 12px;
+  }
+  .capture-main {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .save-row .btn-bb {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
+/* ── Desktop action section (in ctrl-col) ── */
+.action-section {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* ── Burst button styling ── */
+.burst-btn {
+  flex-shrink: 0;
+}
+
+/* ── Upload button dashed ── */
+.upload-btn {
+  border-style: dashed;
+  flex-shrink: 0;
+}
+.upload-btn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  border-style: dashed;
+}
+
+/* ── Still confirm bar ── */
+.still-confirm {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(to top, rgba(14,11,16,0.95) 70%, transparent);
+}
+.still-confirm-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.still-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--pink2);
+  letter-spacing: 0.08em;
+}
+.still-actions { display: flex; gap: 0.4rem; }
+.still-actions .btn-bb { padding: 0.38rem 0.85rem; font-size: 0.78rem; }
+
+/* ── Camera help modal ── */
+.camera-help-content { display: flex; flex-direction: column; gap: 0.75rem; }
+.help-item { padding: 0.7rem 0.9rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+.help-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; color: var(--pink); text-transform: uppercase; margin-bottom: 0.3rem; }
+.help-text { font-size: 0.8rem; color: var(--text2); line-height: 1.65; }
+
+/* ── Browser compat warning ── */
+.compat-warn {
+  position: absolute;
+  bottom: 10px; left: 10px; right: 10px;
+  display: flex; align-items: flex-start; gap: 6px;
+  padding: 0.5rem 0.75rem;
+  background: rgba(200,75,58,0.18);
+  border: 1px solid rgba(200,75,58,0.4);
+  border-radius: var(--radius);
+  font-family: 'DM Mono', monospace; font-size: 0.62rem; color: #f08070; line-height: 1.5;
+  pointer-events: none;
+}
