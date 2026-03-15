@@ -2,8 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f4a7c0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0e0b10" />
     <meta
       name="description"
       content="Bilderbox — your cute analog-style photobooth. Free, private, runs entirely in your browser."
@@ -14,31 +17,17 @@
       content="black-translucent"
     />
     <meta name="apple-mobile-web-app-title" content="Bilderbox" />
-    <meta property="og:title" content="Bilderbox — Photobooth" />
-    <meta
-      property="og:description"
-      content="Your cute analog photobooth. Free, private, no sign-up."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://bilderbox.netlify.app" />
     <title>Bilderbox — Photobooth</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
-    <link rel="canonical" href="https://bilderbox.netlify.app/" />
     <script>
       if (localStorage.getItem("bb-theme") === "light") {
         document.documentElement.classList.add("light-mode");
-        document.body && document.body.classList.add("light-mode");
       }
     </script>
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -50,34 +39,872 @@
     ></script>
   </head>
   <body>
-    <noscript>
-      <div
-        style="
-          position: fixed;
-          inset: 0;
-          background: #0e0b10;
-          color: #f0eaf5;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding: 2rem;
-          font-family: sans-serif;
-          z-index: 9999;
-        "
-      >
-        <div>
-          <p style="font-size: 1.4rem; color: #f4a7c0; margin-bottom: 1rem">
-            JavaScript required
-          </p>
-          <p style="font-size: 0.9rem; color: #a89ab8; line-height: 1.8">
-            Bilderbox needs JavaScript to run.<br />Please enable JavaScript in
-            your browser settings.
-          </p>
+    <!-- ══════════════════════════════════════
+     SCREEN 1 — VIEWFINDER (full-screen)
+══════════════════════════════════════ -->
+    <div id="screen-viewfinder" class="screen screen-active">
+      <!-- Header bar — minimal -->
+      <header class="vf-header">
+        <a href="index.html" class="vf-logo">bilder<span>box</span></a>
+        <div class="vf-header-right">
+          <button
+            class="vf-icon-btn"
+            onclick="toggleTheme()"
+            aria-label="Toggle theme"
+          >
+            <svg
+              id="theme-icon-dark"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <circle cx="8" cy="8" r="3.5" />
+              <path
+                d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"
+              />
+            </svg>
+            <svg
+              id="theme-icon-light"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="display: none"
+            >
+              <path d="M13.5 8.5a5.5 5.5 0 01-7-7 6 6 0 107 7z" />
+            </svg>
+          </button>
+          <div
+            id="pwa-install-btn"
+            class="vf-pill-btn"
+            style="display: none"
+            onclick="installPWA()"
+          >
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M8 2v8M5 7l3 3 3-3" />
+              <path d="M2 13h12" />
+            </svg>
+            Install
+          </div>
+          <div id="ios-hint" class="vf-pill-btn" style="display: none">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M8 2v6M5 4l3-3 3 3" />
+              <rect x="2" y="10" width="12" height="5" rx="1" />
+            </svg>
+            Add
+          </div>
+        </div>
+      </header>
+
+      <!-- Full-screen camera -->
+      <div class="vf-camera" id="camera-wrap">
+        <!-- Startup state -->
+        <div id="startup" class="startup-screen">
+          <div class="startup-film-icon">
+            <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
+              <rect
+                x="4"
+                y="14"
+                width="48"
+                height="32"
+                rx="5"
+                stroke="#f4a7c0"
+                stroke-width="2"
+              />
+              <circle cx="28" cy="30" r="9" stroke="#f4a7c0" stroke-width="2" />
+              <circle cx="28" cy="30" r="4" fill="#f4a7c0" />
+              <rect
+                x="18"
+                y="9"
+                width="9"
+                height="5"
+                rx="2"
+                stroke="#f4a7c0"
+                stroke-width="2"
+              />
+              <circle cx="44" cy="20" r="3" fill="#f4a7c0" />
+            </svg>
+          </div>
+          <h2>Willkommen!</h2>
+          <p>Tap to start your analog photobooth</p>
+          <button class="startup-btn" onclick="startCamera()">
+            Enable camera
+          </button>
+        </div>
+        <!-- Camera error -->
+        <div id="camera-error" class="startup-screen" style="display: none">
+          <div class="startup-film-icon" style="color: #c84b3a">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              stroke="#c84b3a"
+              stroke-width="2"
+            >
+              <circle cx="24" cy="24" r="20" />
+              <path d="M24 14v12M24 32v2" />
+            </svg>
+          </div>
+          <h2>Camera unavailable</h2>
+          <p id="camera-error-msg">Could not access camera.</p>
+          <button class="startup-btn" onclick="retryCameraAccess()">
+            Try again
+          </button>
+          <button
+            class="startup-btn startup-btn-ghost"
+            onclick="showCameraHelp()"
+          >
+            How to fix this
+          </button>
+        </div>
+
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas-preview"></canvas>
+        <img
+          id="still-preview-img"
+          src=""
+          alt=""
+          style="
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 9;
+          "
+        />
+
+        <!-- Film grain overlay -->
+        <div class="film-grain"></div>
+        <!-- Vignette -->
+        <div class="vignette"></div>
+        <!-- Frame overlay -->
+        <div class="frame-overlay" id="frame-overlay"></div>
+
+        <!-- Countdown -->
+        <div id="countdown" class="vf-countdown"></div>
+        <!-- Flash -->
+        <div class="flash" id="flash"></div>
+        <!-- Live filter label -->
+        <div class="live-filter-label" id="live-filter-label"></div>
+        <!-- Compat warn -->
+        <div id="compat-warn" class="compat-warn" style="display: none">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="8" cy="8" r="6.5" />
+            <path d="M8 5v4M8 11v1" />
+          </svg>
+          <span id="compat-warn-msg"></span>
+        </div>
+
+        <!-- Upload preview confirm -->
+        <div id="still-confirm" class="still-confirm" style="display: none">
+          <div class="still-confirm-inner">
+            <span class="still-label">Adjust filter &amp; frame, then add</span>
+            <div class="still-actions">
+              <button class="sca-btn sca-confirm" onclick="confirmStill()">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M2 8l4 4 8-8" />
+                </svg>
+                Add
+              </button>
+              <button class="sca-btn sca-cancel" onclick="cancelStill()">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M3 3l10 10M13 3L3 13" />
+                </svg>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom HUD: layout picker + capture button -->
+        <div class="vf-hud">
+          <!-- Layout selector pills -->
+          <div class="vf-layout-row" id="vf-layout-row"></div>
+          <!-- Main capture row -->
+          <div class="vf-capture-row">
+            <!-- Left: timer -->
+            <div class="vf-timer-group">
+              <button
+                class="vf-timer-btn active"
+                onclick="setTimer(0, this)"
+                data-secs="0"
+              >
+                Off
+              </button>
+              <button
+                class="vf-timer-btn"
+                onclick="setTimer(3, this)"
+                data-secs="3"
+              >
+                3s
+              </button>
+              <button
+                class="vf-timer-btn"
+                onclick="setTimer(5, this)"
+                data-secs="5"
+              >
+                5s
+              </button>
+              <button
+                class="vf-timer-btn"
+                onclick="setTimer(10, this)"
+                data-secs="10"
+              >
+                10s
+              </button>
+            </div>
+            <!-- Center: shutter -->
+            <button
+              class="vf-shutter"
+              id="capture-btn"
+              onclick="capturePhoto()"
+              disabled
+              aria-label="Capture"
+            >
+              <span class="vf-shutter-inner"></span>
+            </button>
+            <!-- Right: burst + upload -->
+            <div class="vf-right-group">
+              <button
+                class="vf-side-btn"
+                id="burst-btn"
+                onclick="startBurst()"
+                disabled
+                aria-label="Burst ×4"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path d="M1 8h3M12 8h3M8 1v3M8 12v3" />
+                  <circle cx="8" cy="8" r="3" />
+                </svg>
+                <span>×4</span>
+              </button>
+              <button
+                class="vf-side-btn"
+                id="upload-btn"
+                onclick="triggerUpload()"
+                aria-label="Upload"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path d="M8 2v8M5 5l3-3 3 3" />
+                  <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
+                </svg>
+                <span>Upload</span>
+              </button>
+            </div>
+          </div>
+          <!-- Photo counter dots -->
+          <div class="vf-photo-dots" id="vf-photo-dots"></div>
         </div>
       </div>
-    </noscript>
 
+      <!-- View photos + proceed bar -->
+      <div class="vf-proceed-bar" id="vf-proceed-bar" style="display: none">
+        <div class="vf-thumb-row" id="vf-thumb-row"></div>
+        <button
+          class="vf-proceed-btn"
+          id="vf-proceed-btn"
+          onclick="goToCustomize()"
+        >
+          Customize &amp; Save
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 8h8M9 5l3 3-3 3" />
+          </svg>
+        </button>
+      </div>
+
+      <input
+        type="file"
+        id="upload-input"
+        accept="image/*"
+        multiple
+        style="display: none"
+        onchange="handleUpload(event)"
+      />
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 2 — CUSTOMIZE
+══════════════════════════════════════ -->
+    <div id="screen-customize" class="screen">
+      <header class="cust-header">
+        <button class="cust-back-btn" onclick="goToViewfinder()">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M10 3L5 8l5 5" />
+          </svg>
+        </button>
+        <span class="cust-title">Customize</span>
+        <button
+          class="cust-generate-btn"
+          id="cust-generate-btn"
+          onclick="generateStrip()"
+        >
+          Generate
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 8h8M9 5l3 3-3 3" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="cust-body">
+        <!-- Strip preview -->
+        <div class="cust-preview-wrap">
+          <div class="cust-preview" id="cust-preview">
+            <!-- photos rendered here as thumbnails in chosen layout -->
+            <div class="cust-preview-grid" id="cust-preview-grid"></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="cust-controls">
+          <!-- Filter -->
+          <div class="cust-section">
+            <div class="cust-section-label">Filter</div>
+            <div class="cust-pills" id="filter-bar" role="group">
+              <button
+                class="cust-pill active"
+                data-filter="none"
+                onclick="setFilter('none', this)"
+              >
+                None
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="bw"
+                onclick="setFilter('bw', this)"
+              >
+                B&amp;W
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="sepia"
+                onclick="setFilter('sepia', this)"
+              >
+                Sepia
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="vivid"
+                onclick="setFilter('vivid', this)"
+              >
+                Vivid
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="fade"
+                onclick="setFilter('fade', this)"
+              >
+                Fade
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="noir"
+                onclick="setFilter('noir', this)"
+              >
+                Noir
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="warm"
+                onclick="setFilter('warm', this)"
+              >
+                Warm
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="disposable"
+                onclick="setFilter('disposable', this)"
+              >
+                Disposable
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="kodak"
+                onclick="setFilter('kodak', this)"
+              >
+                Kodak
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="fujifilm"
+                onclick="setFilter('fujifilm', this)"
+              >
+                Fujifilm
+              </button>
+              <button
+                class="cust-pill"
+                data-filter="y2k"
+                onclick="setFilter('y2k', this)"
+              >
+                Y2K
+              </button>
+            </div>
+          </div>
+
+          <!-- Frame -->
+          <div class="cust-section">
+            <div class="cust-section-label">Frame</div>
+            <div class="cust-frame-row" id="frames-grid" role="group"></div>
+          </div>
+
+          <!-- Background -->
+          <div class="cust-section">
+            <div class="cust-section-label">Background</div>
+            <div class="cust-bg-row" id="bg-picker-row">
+              <button
+                class="cust-bg-swatch active"
+                data-bg="#0e0b10"
+                onclick="setBg('#0e0b10', this)"
+                style="background: #0e0b10; border: 2px solid var(--pink)"
+                title="Dark"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#fdf6f9"
+                onclick="setBg('#fdf6f9', this)"
+                style="background: #fdf6f9"
+                title="Cream"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#fce8f1"
+                onclick="setBg('#fce8f1', this)"
+                style="background: #fce8f1"
+                title="Pink"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#f5f0e8"
+                onclick="setBg('#f5f0e8', this)"
+                style="background: #f5f0e8"
+                title="Warm White"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#111111"
+                onclick="setBg('#111111', this)"
+                style="background: #111111"
+                title="Black"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#1a0f20"
+                onclick="setBg('#1a0f20', this)"
+                style="background: #1a0f20"
+                title="Deep Purple"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#0a1628"
+                onclick="setBg('#0a1628', this)"
+                style="background: #0a1628"
+                title="Midnight"
+              ></button>
+              <button
+                class="cust-bg-swatch"
+                data-bg="#2a1f06"
+                onclick="setBg('#2a1f06', this)"
+                style="background: #2a1f06"
+                title="Amber Dark"
+              ></button>
+            </div>
+          </div>
+
+          <!-- Mood -->
+          <div class="cust-section">
+            <div class="cust-section-label">Mood</div>
+            <div class="cust-pills" role="group">
+              <span
+                class="cust-pill cust-mood active"
+                onclick="setMood('happy')"
+                title="happy"
+                tabindex="0"
+                role="button"
+                >happy</span
+              >
+              <span
+                class="cust-pill cust-mood"
+                onclick="setMood('dreamy')"
+                title="dreamy"
+                tabindex="0"
+                role="button"
+                >dreamy</span
+              >
+              <span
+                class="cust-pill cust-mood"
+                onclick="setMood('moody')"
+                title="moody"
+                tabindex="0"
+                role="button"
+                >moody</span
+              >
+              <span
+                class="cust-pill cust-mood"
+                onclick="setMood('retro')"
+                title="retro"
+                tabindex="0"
+                role="button"
+                >retro</span
+              >
+              <span
+                class="cust-pill cust-mood"
+                onclick="setMood('y2k')"
+                title="y2k"
+                tabindex="0"
+                role="button"
+                >y2k</span
+              >
+            </div>
+          </div>
+
+          <!-- Timestamp toggle -->
+          <div class="cust-section">
+            <div class="cust-toggle-row">
+              <span class="cust-section-label" style="margin-bottom: 0"
+                >Add date stamp</span
+              >
+              <button
+                class="cust-toggle"
+                id="timestamp-toggle"
+                onclick="toggleTimestamp()"
+                aria-pressed="false"
+              >
+                <span class="cust-toggle-knob"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 3 — GENERATING (film animation)
+══════════════════════════════════════ -->
+    <div id="screen-generating" class="screen">
+      <div class="gen-wrap">
+        <div class="gen-film-strip" id="gen-film-strip">
+          <!-- film strip cells rendered by JS -->
+        </div>
+        <div class="gen-label">
+          <span class="gen-label-text" id="gen-label-text"
+            >Developing your film…</span
+          >
+          <div class="gen-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 4 — RESULT
+══════════════════════════════════════ -->
+    <div id="screen-result" class="screen">
+      <header class="result-header">
+        <div class="result-header-title">Your strip</div>
+        <button class="result-new-btn" onclick="startOver()">
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M2 8a6 6 0 1112 0" />
+            <path d="M14 4v4h-4" />
+          </svg>
+          New shoot
+        </button>
+      </header>
+
+      <div class="result-body">
+        <div class="result-img-wrap">
+          <img
+            id="result-img"
+            src=""
+            alt="Your photo strip"
+            class="result-img"
+            style="display: none"
+          />
+        </div>
+        <div class="result-actions">
+          <button
+            class="result-action-btn result-action-primary"
+            onclick="downloadResult()"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M8 2v8M5 7l3 3 3-3" />
+              <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
+            </svg>
+            Download
+          </button>
+          <button class="result-action-btn" onclick="shareResult()">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="4" r="2" />
+              <circle cx="4" cy="8" r="2" />
+              <circle cx="12" cy="12" r="2" />
+              <path d="M6 7l4-2M6 9l4 2" />
+            </svg>
+            Share
+          </button>
+          <button class="result-action-btn" onclick="showQR()">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="2" width="5" height="5" rx="1" />
+              <rect x="9" y="2" width="5" height="5" rx="1" />
+              <rect x="2" y="9" width="5" height="5" rx="1" />
+              <rect
+                x="3.5"
+                y="3.5"
+                width="2"
+                height="2"
+                fill="currentColor"
+                stroke="none"
+              />
+              <rect
+                x="10.5"
+                y="3.5"
+                width="2"
+                height="2"
+                fill="currentColor"
+                stroke="none"
+              />
+              <rect
+                x="3.5"
+                y="10.5"
+                width="2"
+                height="2"
+                fill="currentColor"
+                stroke="none"
+              />
+              <path d="M9 9h2v2M9 11v2h2M11 9h2" />
+            </svg>
+            QR Code
+          </button>
+          <button class="result-action-btn" onclick="shareToInstagram()">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="2" width="12" height="12" rx="3" />
+              <circle cx="8" cy="8" r="2.5" />
+              <circle
+                cx="11.5"
+                cy="4.5"
+                r="0.75"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+            Instagram
+          </button>
+        </div>
+        <!-- QR section -->
+        <div id="qr-section" class="result-qr" style="display: none">
+          <div class="qr-label">Scan to view on another device</div>
+          <div id="qr-code-wrap"></div>
+          <div class="qr-note">Opens in browser. Works on any phone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Camera help modal ─── -->
+    <div
+      class="modal-bg"
+      id="camera-help-modal"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-card">
+        <div class="modal-header-row">
+          <h3>Camera access help</h3>
+          <button class="modal-close" onclick="closeModal('camera-help-modal')">
+            &#10005;
+          </button>
+        </div>
+        <div class="camera-help-content">
+          <div class="help-item">
+            <div class="help-label">Chrome / Edge</div>
+            <div class="help-text">
+              Click the camera icon in the address bar → Allow → Reload.
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-label">Safari (iOS)</div>
+            <div class="help-text">
+              Settings → Safari → Camera → Allow. Then reload.
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-label">Firefox</div>
+            <div class="help-text">
+              Shield icon → Permissions → Camera → Allow.
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-label">Camera in use</div>
+            <div class="help-text">
+              Close other video apps or tabs, then reload.
+            </div>
+          </div>
+        </div>
+        <button
+          class="sca-btn sca-confirm"
+          style="margin-top: 0.25rem"
+          onclick="
+            closeModal('camera-help-modal');
+            retryCameraAccess();
+          "
+        >
+          Try again
+        </button>
+      </div>
+    </div>
+
+    <!-- Photo view modal -->
+    <div class="modal-bg" id="photo-modal" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header-row">
+          <h3>Photo</h3>
+          <button class="modal-close" onclick="closeModal('photo-modal')">
+            &#10005;
+          </button>
+        </div>
+        <img class="modal-preview" id="modal-img" src="" alt="Photo" />
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+          <button
+            class="sca-btn sca-confirm"
+            onclick="downloadSingleFromModal()"
+          >
+            Download
+          </button>
+          <button
+            class="sca-btn"
+            onclick="shareNativeSingle()"
+            style="
+              background: var(--surface2);
+              border-color: var(--border2);
+              color: var(--text);
+            "
+          >
+            Share
+          </button>
+          <button
+            class="sca-btn"
+            onclick="deleteFromModal()"
+            style="
+              background: rgba(200, 75, 58, 0.12);
+              border-color: rgba(200, 75, 58, 0.4);
+              color: var(--red);
+            "
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error boundary -->
     <div
       id="error-boundary"
       style="
@@ -134,1002 +961,9 @@
       </div>
     </div>
 
-    <!-- ─── Header ─── -->
-    <header class="app-header">
-      <div class="hdr-inner">
-        <div class="logo">
-          bilder<span>box</span>
-          <div class="logo-sub">dein fotostudio</div>
-        </div>
-        <div class="hdr-right">
-          <button
-            id="theme-toggle"
-            class="theme-toggle"
-            onclick="toggleTheme()"
-            aria-label="Toggle theme"
-          >
-            <svg
-              id="theme-icon-dark"
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <circle cx="8" cy="8" r="3.5" />
-              <path
-                d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"
-              />
-            </svg>
-            <svg
-              id="theme-icon-light"
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              style="display: none"
-            >
-              <path d="M13.5 8.5a5.5 5.5 0 01-7-7 6 6 0 107 7z" />
-            </svg>
-          </button>
-          <div
-            id="pwa-install-btn"
-            class="install-btn"
-            style="display: none"
-            onclick="installPWA()"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M8 2v8M5 7l3 3 3-3" />
-              <path d="M2 13h12" />
-            </svg>
-            Install
-          </div>
-          <div
-            id="ios-hint"
-            class="install-btn"
-            style="display: none"
-            title="Open Share → Add to Home Screen"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M8 2v6M5 4l3-3 3 3" />
-              <rect x="2" y="10" width="12" height="5" rx="1" />
-            </svg>
-            Add to Home
-          </div>
-          <div class="header-tag d-none d-md-block">Photobooth Studio</div>
-        </div>
-      </div>
-    </header>
-
-    <!-- ─── Main layout ─── -->
-    <div class="workspace">
-      <!-- LEFT: camera + controls stacked on mobile -->
-      <div class="cam-col">
-        <!-- Camera viewfinder -->
-        <div class="camera-wrap" id="camera-wrap">
-          <div id="startup" class="startup-screen">
-            <div class="startup-icon">
-              <svg
-                width="44"
-                height="44"
-                viewBox="0 0 48 48"
-                fill="none"
-                stroke="#f4a7c0"
-                stroke-width="2"
-              >
-                <rect x="4" y="12" width="40" height="28" rx="5" />
-                <circle cx="24" cy="26" r="8" />
-                <circle cx="24" cy="26" r="4" fill="#f4a7c0" />
-                <rect x="16" y="7" width="8" height="5" rx="2" />
-                <circle cx="38" cy="18" r="2.5" fill="#f4a7c0" stroke="none" />
-              </svg>
-            </div>
-            <h2>Willkommen!</h2>
-            <p>
-              Your cute analog photobooth.<br />Allow camera access to begin.
-            </p>
-            <button class="btn-bb btn-pink" onclick="startCamera()">
-              Enable camera
-            </button>
-          </div>
-          <div id="camera-error" class="startup-screen" style="display: none">
-            <div class="startup-icon">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 48 48"
-                fill="none"
-                stroke="#c84b3a"
-                stroke-width="2"
-              >
-                <circle cx="24" cy="24" r="20" />
-                <path d="M24 14v12M24 32v2" />
-              </svg>
-            </div>
-            <h2 style="color: var(--text2)">Camera unavailable</h2>
-            <p id="camera-error-msg">Could not access camera.</p>
-            <button class="btn-bb btn-pink" onclick="retryCameraAccess()">
-              Try again
-            </button>
-            <button
-              class="btn-bb"
-              onclick="showCameraHelp()"
-              style="margin-top: 0.25rem"
-            >
-              How to fix this
-            </button>
-          </div>
-          <video id="video" autoplay muted playsinline></video>
-          <canvas id="canvas-preview"></canvas>
-          <img
-            id="still-preview-img"
-            src=""
-            alt=""
-            style="
-              display: none;
-              position: absolute;
-              inset: 0;
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              z-index: 9;
-              border-radius: inherit;
-            "
-          />
-          <div class="grain"></div>
-          <div class="frame-overlay" id="frame-overlay"></div>
-          <div class="vignette"></div>
-          <div id="countdown" aria-live="assertive"></div>
-          <div class="flash" id="flash"></div>
-          <div
-            class="live-filter-label"
-            id="live-filter-label"
-            aria-live="polite"
-          ></div>
-          <div id="compat-warn" class="compat-warn" style="display: none">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <circle cx="8" cy="8" r="6.5" />
-              <path d="M8 5v4M8 11v1" />
-            </svg>
-            <span id="compat-warn-msg"></span>
-          </div>
-          <!-- Still image confirm bar -->
-          <div id="still-confirm" class="still-confirm" style="display: none">
-            <div class="still-confirm-inner">
-              <span class="still-label"
-                >Adjust filter &amp; frame, then add</span
-              >
-              <div class="still-actions">
-                <button class="btn-bb btn-pink" onclick="confirmStill()">
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path d="M2 8l4 4 8-8" />
-                  </svg>
-                  Add to strip
-                </button>
-                <button class="btn-bb" onclick="cancelStill()">
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path d="M3 3l10 10M13 3L3 13" />
-                  </svg>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- FIX 4: Action buttons RIGHT BELOW the camera on mobile -->
-        <div class="quick-actions">
-          <div class="capture-row">
-            <button
-              class="btn-bb btn-pink capture-main"
-              id="capture-btn"
-              onclick="capturePhoto()"
-              disabled
-              aria-label="Take photo"
-            >
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <circle cx="8" cy="8" r="3" />
-                <circle cx="8" cy="8" r="6.5" stroke-dasharray="2 2" />
-              </svg>
-              Capture
-            </button>
-            <button
-              class="btn-bb burst-btn"
-              id="burst-btn"
-              onclick="startBurst()"
-              disabled
-              aria-label="Burst 4 photos"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path d="M1 8h3M12 8h3M8 1v3M8 12v3" />
-                <circle cx="8" cy="8" r="3" />
-              </svg>
-              ×4
-            </button>
-            <button
-              class="btn-bb upload-btn"
-              id="upload-btn"
-              onclick="triggerUpload()"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path d="M8 2v8M5 5l3-3 3 3" />
-                <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
-              </svg>
-              Upload
-            </button>
-            <input
-              type="file"
-              id="upload-input"
-              accept="image/*"
-              multiple
-              style="display: none"
-              onchange="handleUpload(event)"
-            />
-          </div>
-          <div class="save-row">
-            <button
-              class="btn-bb save-btn"
-              onclick="downloadStrip()"
-              id="print-btn"
-              disabled
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path d="M8 2v8M5 7l3 3 3-3" />
-                <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
-              </svg>
-              Save strip
-            </button>
-            <button
-              class="btn-bb btn-share-main share-btn"
-              onclick="openShareHub()"
-              id="share-hub-btn"
-              disabled
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <circle cx="12" cy="4" r="2" />
-                <circle cx="4" cy="8" r="2" />
-                <circle cx="12" cy="12" r="2" />
-                <path d="M6 7l4-2M6 9l4 2" />
-              </svg>
-              Share
-            </button>
-            <button
-              class="btn-bb btn-danger-bb"
-              onclick="clearAll()"
-              id="clear-btn"
-              disabled
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10" />
-              </svg>
-              Clear
-            </button>
-          </div>
-        </div>
-
-        <!-- Mobile thumbnail strip — horizontal scrollable photos -->
-        <div class="mobile-thumbnail-bar" id="mobile-thumbnail-bar">
-          <div class="mobile-thumbnail-strip" id="mobile-thumbnail-strip"></div>
-        </div>
-      </div>
-      <!-- end cam-col -->
-
-      <!-- RIGHT: controls panel (desktop sticky, mobile below) -->
-      <div class="ctrl-col">
-        <!-- Timer -->
-        <div class="ctrl-section">
-          <div class="section-label">Timer</div>
-          <div class="timer-btns" role="group">
-            <button class="timer-btn active" onclick="setTimer(0, this)">
-              Off
-            </button>
-            <button class="timer-btn" onclick="setTimer(3, this)">3s</button>
-            <button class="timer-btn" onclick="setTimer(5, this)">5s</button>
-            <button class="timer-btn" onclick="setTimer(10, this)">10s</button>
-          </div>
-        </div>
-
-        <!-- Mood -->
-        <div class="ctrl-section">
-          <div class="section-label">Mood</div>
-          <div class="mood-bar">
-            <span
-              onclick="setMood('happy')"
-              class="mood active"
-              title="happy"
-              tabindex="0"
-              role="button"
-              >happy</span
-            >
-            <span
-              onclick="setMood('dreamy')"
-              class="mood"
-              title="dreamy"
-              tabindex="0"
-              role="button"
-              >dreamy</span
-            >
-            <span
-              onclick="setMood('moody')"
-              class="mood"
-              title="moody"
-              tabindex="0"
-              role="button"
-              >moody</span
-            >
-            <span
-              onclick="setMood('retro')"
-              class="mood"
-              title="retro"
-              tabindex="0"
-              role="button"
-              >retro</span
-            >
-            <span
-              onclick="setMood('y2k')"
-              class="mood"
-              title="y2k"
-              tabindex="0"
-              role="button"
-              >y2k</span
-            >
-          </div>
-        </div>
-
-        <!-- Filter -->
-        <div class="ctrl-section">
-          <div class="section-label">Filter</div>
-          <div class="filter-bar" id="filter-bar" role="group">
-            <button
-              class="filter-btn active"
-              data-filter="none"
-              onclick="setFilter('none', this)"
-            >
-              None
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="bw"
-              onclick="setFilter('bw', this)"
-            >
-              B&amp;W
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="sepia"
-              onclick="setFilter('sepia', this)"
-            >
-              Sepia
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="vivid"
-              onclick="setFilter('vivid', this)"
-            >
-              Vivid
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="fade"
-              onclick="setFilter('fade', this)"
-            >
-              Fade
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="noir"
-              onclick="setFilter('noir', this)"
-            >
-              Noir
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="warm"
-              onclick="setFilter('warm', this)"
-            >
-              Warm
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="disposable"
-              onclick="setFilter('disposable', this)"
-            >
-              Disposable
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="kodak"
-              onclick="setFilter('kodak', this)"
-            >
-              Kodak
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="fujifilm"
-              onclick="setFilter('fujifilm', this)"
-            >
-              Fujifilm
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="y2k"
-              onclick="setFilter('y2k', this)"
-            >
-              Y2K
-            </button>
-          </div>
-        </div>
-
-        <!-- Layout -->
-        <div class="ctrl-section">
-          <div class="section-label">Layout</div>
-          <div id="layout-bar" class="layout-bar" role="group"></div>
-          <div class="layout-cap-hint" id="layout-cap-hint">
-            Max 4 photos · strip
-          </div>
-        </div>
-
-        <!-- Frame -->
-        <div class="ctrl-section">
-          <div class="section-label">Frame</div>
-          <div class="frames-grid" id="frames-grid" role="group"></div>
-        </div>
-
-        <!-- Desktop action buttons -->
-        <div class="ctrl-section action-section d-none d-lg-flex">
-          <button
-            class="btn-bb"
-            onclick="downloadStrip()"
-            id="print-btn-d"
-            disabled
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M8 2v8M5 7l3 3 3-3" />
-              <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" />
-            </svg>
-            Save strip
-          </button>
-          <button
-            class="btn-bb btn-share-main"
-            onclick="openShareHub()"
-            id="share-hub-btn-d"
-            disabled
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <circle cx="12" cy="4" r="2" />
-              <circle cx="4" cy="8" r="2" />
-              <circle cx="12" cy="12" r="2" />
-              <path d="M6 7l4-2M6 9l4 2" />
-            </svg>
-            Share
-          </button>
-          <button
-            class="btn-bb btn-danger-bb"
-            onclick="clearAll()"
-            id="clear-btn-d"
-            disabled
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10" />
-            </svg>
-            Clear
-          </button>
-        </div>
-      </div>
-      <!-- end ctrl-col -->
-    </div>
-    <!-- end workspace -->
-
-    <!-- ─── Modals ─── -->
-
-    <!-- Share Modal -->
-    <div class="modal-bg" id="share-modal" role="dialog" aria-modal="true">
-      <div class="modal-card share-hub-card">
-        <div class="modal-header-row">
-          <h3>Share your strip</h3>
-          <button
-            class="modal-close"
-            onclick="closeModal('share-modal')"
-            aria-label="Close"
-          >
-            &#10005;
-          </button>
-        </div>
-        <canvas id="share-preview-canvas" class="share-preview-canvas"></canvas>
-        <div class="share-layout-row">
-          <button
-            class="share-layout-btn active"
-            onclick="setShareFormat('strip', this)"
-          >
-            Strip
-          </button>
-          <button
-            class="share-layout-btn"
-            onclick="setShareFormat('reel', this)"
-          >
-            Reel 9:16
-          </button>
-          <button
-            class="share-layout-btn"
-            onclick="setShareFormat('grid', this)"
-          >
-            Grid 1:1
-          </button>
-        </div>
-        <div class="share-grid">
-          <button class="share-btn" onclick="shareToInstagram()">
-            <svg
-              class="share-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <rect x="2" y="2" width="20" height="20" rx="5" />
-              <circle cx="12" cy="12" r="4.5" />
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg
-            >Instagram
-          </button>
-          <button class="share-btn" onclick="shareNative()">
-            <svg
-              class="share-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <circle cx="18" cy="6" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="18" r="3" />
-              <path d="M9 10.5l6-3M9 13.5l6 3" /></svg
-            >Share
-          </button>
-          <button class="share-btn" onclick="downloadShareImage()">
-            <svg
-              class="share-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M12 4v12M8 12l4 4 4-4" />
-              <path d="M4 18v1a1 1 0 001 1h14a1 1 0 001-1v-1" /></svg
-            >Download
-          </button>
-          <button class="share-btn" onclick="showQR()">
-            <svg
-              class="share-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <rect x="3" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="3" width="7" height="7" rx="1" />
-              <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect
-                x="5"
-                y="5"
-                width="3"
-                height="3"
-                fill="currentColor"
-                stroke="none"
-              />
-              <rect
-                x="16"
-                y="5"
-                width="3"
-                height="3"
-                fill="currentColor"
-                stroke="none"
-              />
-              <rect
-                x="5"
-                y="16"
-                width="3"
-                height="3"
-                fill="currentColor"
-                stroke="none"
-              />
-              <path d="M14 14h3v3M14 17v3h3M17 14h3" /></svg
-            >QR Code
-          </button>
-        </div>
-        <div id="qr-section" class="qr-section" style="display: none">
-          <div class="qr-label">Scan to view this photo strip</div>
-          <div id="qr-code-wrap"></div>
-          <div class="qr-note">Opens in browser. Works on any phone.</div>
-        </div>
-        <button class="btn-bb" onclick="closeModal('share-modal')">
-          Close
-        </button>
-      </div>
-    </div>
-
-    <!-- Photo modal -->
-    <div class="modal-bg" id="photo-modal" role="dialog" aria-modal="true">
-      <div class="modal-card">
-        <div class="modal-header-row">
-          <h3>Photo</h3>
-          <button class="modal-close" onclick="closeModal('photo-modal')">
-            &#10005;
-          </button>
-        </div>
-        <img class="modal-preview" id="modal-img" src="" alt="Captured photo" />
-        <div class="d-flex gap-2 flex-wrap">
-          <button class="btn-bb btn-pink" onclick="downloadSingle()">
-            Download
-          </button>
-          <button class="btn-bb" onclick="shareNativeSingle()">Share</button>
-          <button class="btn-bb btn-danger-bb" onclick="deleteCurrent()">
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Timestamp modal -->
-    <div class="modal-bg" id="timestamp-modal" role="dialog" aria-modal="true">
-      <div class="modal-card timestamp-card">
-        <div class="modal-header-row">
-          <h3>Add timestamp?</h3>
-          <button class="modal-close" onclick="closeModal('timestamp-modal')">
-            &#10005;
-          </button>
-        </div>
-        <p class="ts-desc">Would you like to add today's date to your strip?</p>
-        <div class="ts-preview-wrap">
-          <canvas id="ts-preview-canvas" class="ts-preview-canvas"></canvas>
-        </div>
-        <div class="d-flex gap-2 flex-wrap">
-          <button class="btn-bb btn-pink" onclick="finalizeDownload(true)">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M2 8l4 4 8-8" /></svg
-            >Yes, add date
-          </button>
-          <button class="btn-bb" onclick="finalizeDownload(false)">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M8 2v8M5 7l3 3 3-3" />
-              <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" /></svg
-            >No, just save
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Strip preview modal -->
-    <div
-      class="modal-bg"
-      id="strip-preview-modal"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="modal-card strip-prev-card">
-        <div class="modal-header-row">
-          <h3>Your strip is ready</h3>
-          <button
-            class="modal-close"
-            onclick="closeModal('strip-preview-modal')"
-          >
-            &#10005;
-          </button>
-        </div>
-        <img
-          id="strip-preview-img"
-          class="strip-prev-img"
-          src=""
-          alt="Your photo strip"
-        />
-        <div class="d-flex gap-2 flex-wrap">
-          <button class="btn-bb btn-pink" onclick="redownloadStrip()">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path d="M8 2v8M5 7l3 3 3-3" />
-              <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" /></svg
-            >Download again
-          </button>
-          <button
-            class="btn-bb btn-share-main"
-            onclick="shareStripFromPreview()"
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <circle cx="12" cy="4" r="2" />
-              <circle cx="4" cy="8" r="2" />
-              <circle cx="12" cy="12" r="2" />
-              <path d="M6 7l4-2M6 9l4 2" /></svg
-            >Share
-          </button>
-          <button class="btn-bb" onclick="closeModal('strip-preview-modal')">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Camera help modal -->
-    <div
-      class="modal-bg"
-      id="camera-help-modal"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="modal-card">
-        <div class="modal-header-row">
-          <h3>Camera access help</h3>
-          <button class="modal-close" onclick="closeModal('camera-help-modal')">
-            &#10005;
-          </button>
-        </div>
-        <div class="camera-help-content">
-          <div class="help-item">
-            <div class="help-label">Chrome / Edge</div>
-            <div class="help-text">
-              Click the camera icon in the address bar → Allow → Reload the
-              page.
-            </div>
-          </div>
-          <div class="help-item">
-            <div class="help-label">Safari (iOS)</div>
-            <div class="help-text">
-              Settings → Safari → Camera → Allow. Then reload this page.
-            </div>
-          </div>
-          <div class="help-item">
-            <div class="help-label">Firefox</div>
-            <div class="help-text">
-              Click the shield icon → Permissions → Camera → Allow.
-            </div>
-          </div>
-          <div class="help-item">
-            <div class="help-label">Camera in use by another app</div>
-            <div class="help-text">
-              Close other video apps or tabs, then reload.
-            </div>
-          </div>
-        </div>
-        <button
-          class="btn-bb btn-pink"
-          onclick="
-            closeModal('camera-help-modal');
-            retryCameraAccess();
-          "
-        >
-          Try again
-        </button>
-      </div>
-    </div>
-
-    <!-- ─── Footer ─── -->
-    <footer class="app-footer">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <div>
-            <a href="index.html" class="footer-logo">bilder<span>box</span></a>
-            <div class="footer-logo-sub">dein fotostudio</div>
-          </div>
-          <p class="footer-tagline">
-            Your cute analog photobooth. No servers, no sign-ups, no cloud.
-          </p>
-          <div class="status-pill">
-            <span class="status-dot"></span>All systems operational
-          </div>
-        </div>
-        <div class="footer-nav-block">
-          <div class="footer-nav-label">Pages</div>
-          <a href="index.html" class="footer-nav-link"
-            ><span class="link-dot"></span> Photobooth</a
-          >
-          <a href="about.html" class="footer-nav-link"
-            ><span class="link-dot"></span> About</a
-          >
-          <a href="privacy.html" class="footer-nav-link"
-            ><span class="link-dot"></span> Privacy Policy</a
-          >
-          <a href="terms.html" class="footer-nav-link"
-            ><span class="link-dot"></span> Terms of Service</a
-          >
-        </div>
-        <div class="footer-info-block">
-          <div class="footer-nav-label">How it works</div>
-          <div class="footer-info-item">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="var(--pink)"
-              stroke-width="1.4"
-            >
-              <circle cx="8" cy="8" r="6.5" />
-              <path d="M8 5v4l2.5 1.5" /></svg
-            >Runs entirely in your browser
-          </div>
-          <div class="footer-info-item">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="var(--pink)"
-              stroke-width="1.4"
-            >
-              <rect x="2" y="3" width="12" height="10" rx="1.5" />
-              <path d="M5 3V2M11 3V2M2 7h12" /></svg
-            >Photos stay on your device
-          </div>
-          <div class="footer-info-item">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="var(--pink)"
-              stroke-width="1.4"
-            >
-              <path d="M8 2a6 6 0 100 12A6 6 0 008 2z" />
-              <path d="M8 5v3l2 2" /></svg
-            >Zero data collected, ever
-          </div>
-          <div class="footer-info-item">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="var(--pink)"
-              stroke-width="1.4"
-            >
-              <path d="M2 10s2-2 4-2 4 4 6 4 4-2 4-2" /></svg
-            >Installs as a PWA
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-copy">
-          &copy; 2026 Bilderbox. All rights reserved.
-        </div>
-        <div class="footer-legal-links">
-          <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a
-          ><a href="about.html">About</a>
-        </div>
-        <div class="footer-made-with">
-          made with <span>&hearts;</span> and a camera
-        </div>
-      </div>
-    </footer>
-
     <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
     <canvas id="strip-canvas" style="display: none"></canvas>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
